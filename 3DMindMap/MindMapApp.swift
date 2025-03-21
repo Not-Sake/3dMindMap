@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct _DMindMapApp: App {
+struct MindMapApp: App {
     
     @State private var appModel = AppModel()
     @State private var avPlayerViewModel = AVPlayerViewModel()
