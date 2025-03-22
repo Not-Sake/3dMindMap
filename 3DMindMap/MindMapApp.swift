@@ -35,5 +35,11 @@ struct MindMapApp: App {
                 }
         }
         .immersionStyle(selection: .constant(.full), in: .full)
+        
+        WindowGroup("New Window", for: NewWindowID.ID.self) { $id in
+            TextFieldView(id: id ?? 1)
+            
+        }
+        .defaultSize(CGSize(width: 400, height: 5))
     }
 }

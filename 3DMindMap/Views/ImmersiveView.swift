@@ -11,9 +11,16 @@ import RealityKitContent
 struct ImmersiveView: View {
     @State private var cubes: [Entity] = []
     @State var model = ImmersiveViewModel()
+ 
+    @State var isTextFieldHidden = false
+    @State var nextWindowID = NewWindowID(id: 1)
+    
+    @Environment(\.openWindow) private var openWindow
+    
     var body: some View {
-        // 背景追加
         RealityView { content in
+            
+            // 背景追加
             var material = UnlitMaterial()
             guard let resource = try? TextureResource.load(named: "space") else {
                 fatalError("Couldn't load texture resource.")
@@ -25,8 +32,6 @@ struct ImmersiveView: View {
             
             entity.scale *= SIMD3(repeating: -1)
             content.add(entity)
-        }
-        RealityView { content in
             
             
             let scene = model.setupContentEntity()
@@ -36,6 +41,7 @@ struct ImmersiveView: View {
             for cube in cubes {
                 scene.addChild(cube)
             }
+            
         }
         .gesture(
             DragGesture()
@@ -55,18 +61,29 @@ struct ImmersiveView: View {
             TapGesture()
                 .targetedToAnyEntity()
                 .onEnded { value in
-                    let entity = value.entity
-                    let entityId = entity.name
-                    model.addCube(text: "aaa", parentId: entityId)
+                    if isTextFieldHidden {
+                        let entity = value.entity
+                        let entityId = entity.name
+                        isTextFieldHidden.toggle()
+                        model.addCube(text: "aaa", parentId: entityId)
+                    }else{
+                        isTextFieldHidden.toggle()
+                    }
                 }
         )
         //デバッグ用でとりあえず一個
         .onAppear(){
             model.addInitialCube(text: "aaa")
         }
+        .onChange(of: isTextFieldHidden){
+            openWindow(value: nextWindowID.id)
+            
+        }
+        
     }
     
 }
+
 
 
 #Preview(immersionStyle: .full) {
