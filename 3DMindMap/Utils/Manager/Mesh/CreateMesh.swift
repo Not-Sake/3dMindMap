@@ -25,7 +25,7 @@ class CreateMesh {
         let collisionShape = ShapeResource.generateBox(size: [0.3, 0.2, 0.1])
         nodeEntity.components.set(CollisionComponent(shapes: [collisionShape],
   isStatic: false,
-                                                     filter: .default))
+   filter: .default))
         
         // 2. 物理特性の設定 (PhysicsBodyComponent)
         let physicsMaterial = PhysicsMaterialResource.generate(friction: 0.8, restitution: 0.0)
