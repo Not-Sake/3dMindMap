@@ -10,16 +10,12 @@ import RealityKitContent
 
 struct ImmersiveView: View {
     @State private var cubes: [Entity] = []
-    @State var model = ImmersiveViewModel()
- 
-    @State var isTextFieldHidden = false
+    @State var model = ImmersiveViewModel.shared
     @State var nextWindowID = NewWindowID(id: 1)
-    
     @Environment(\.openWindow) private var openWindow
     
     var body: some View {
         RealityView { content in
-            
             // 背景追加
             var material = UnlitMaterial()
             guard let resource = try? TextureResource.load(named: "space") else {
@@ -61,27 +57,25 @@ struct ImmersiveView: View {
             TapGesture()
                 .targetedToAnyEntity()
                 .onEnded { value in
-                    if isTextFieldHidden {
+//                    if model.showTextField {
                         let entity = value.entity
                         let entityId = entity.name
-                        isTextFieldHidden.toggle()
-                        model.addCube(text: "aaa", parentId: entityId)
-                    }else{
-                        isTextFieldHidden.toggle()
-                    }
+                        model.selectedNodeId = entityId
+                        print("selected", model.selectedNodeId)
+                        openWindow(value: nextWindowID.id)
+//                    }
                 }
         )
         //デバッグ用でとりあえず一個
         .onAppear(){
-            model.addInitialCube(text: "aaa")
+            if model.nodes.isEmpty {
+                model.addInitialCube()
+            }
         }
-        .onChange(of: isTextFieldHidden){
-            openWindow(value: nextWindowID.id)
-            
-        }
-        
+//        .onChange(of: isTextFieldHidden){
+//            openWindow(value: nextWindowID.id)
+//        }
     }
-    
 }
 
 

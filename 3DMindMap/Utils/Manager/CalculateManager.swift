@@ -16,7 +16,12 @@ class CalculatorManager {
     //ある一定の距離で最適な位置が見つからなかった場合に広げる距離
     let expandDistance: Double = 0.06
     
-    public func newPosition(parentPosition: Point3D, nodes: [NodeType]) -> Point3D {
+    public func newPosition(parentId: String, nodes: [NodeType]) -> Point3D {
+        guard let parent = nodes.first(where: { $0.id == parentId }) else {
+            print("Cannot find parent")
+            return Point3D.zero
+        }
+        let parentPosition = parent.position
         var newPosition: Point3D = .zero
         var continueCalculate: Bool = true
         var distance = minDistance
