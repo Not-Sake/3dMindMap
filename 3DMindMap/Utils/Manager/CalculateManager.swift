@@ -56,7 +56,7 @@ class CalculatorManager {
     
     //MARK: - Nodeの向きを計算
     
-    func calculateNodeDirection(position: Point3D) -> CGFloat {
+    public func calculateNodeDirection(position: Point3D) -> CGFloat {
         let radiant: CGFloat = atan2(position.z, position.x)
         let rotate = radiant - CGFloat.pi / 2
         return rotate
