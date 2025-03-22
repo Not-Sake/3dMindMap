@@ -51,12 +51,14 @@ class ImmersiveViewModel {
         
         cubes.append(newCube)
         addNode(inputText: "打たれたテキストはここ", parentId: parentId, position: Point3D(x: x, y: y, z: z), id: id)
+        
+        dump(nodes)
     }
     
-    func addInitialCube(text: String, parentId: String) {
+    func addInitialCube(text: String) {
         let x: Float = 0
-        let y: Float = 1
-        let z: Float = -1
+        let y: Float = 1.5
+        let z: Float = -4
         let id = UUID().uuidString
         
         let newCube = addEntity(
@@ -65,7 +67,7 @@ class ImmersiveViewModel {
         )
         
         cubes.append(newCube)
-        addNode(inputText: "打たれたテキストはここ", parentId: parentId, position: Point3D(x: x, y: y, z: z), id: id)
+        addNode(inputText: "打たれたテキストはここ", parentId: "", position: Point3D(x: x, y: y, z: z), id: id)
     }
     
     
