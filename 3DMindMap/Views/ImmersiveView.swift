@@ -4,16 +4,13 @@
 //
 //  Created by TAIGA ITO on 2025/03/21.
 //
-
 import SwiftUI
 import RealityKit
 import RealityKitContent
 
 struct ImmersiveView: View {
-    @Environment(AppModel.self) var appModel
+    @State private var cubes: [Entity] = []
     @State var model = ImmersiveViewModel()
-    @State var cube = Entity()
-
     var body: some View {
         // 背景追加
         RealityView { content in
@@ -30,28 +27,46 @@ struct ImmersiveView: View {
             content.add(entity)
         }
         RealityView { content in
-            // Add the initial RealityKit content
             
-            content.add(model.setupContentEntity())
-            cube = model.addCube(name: "Cube1")
             
+            let scene = model.setupContentEntity()
+            content.add(scene)
+            
+            
+            for cube in cubes {
+                scene.addChild(cube)
+            }
         }
         .gesture(
             DragGesture()
-                .targetedToEntity(cube)
+                .targetedToAnyEntity()
                 .onChanged { value in
-                    cube.position = value.convert(value.location3D, from: .local, to: cube.parent!)
+                    let entity = value.entity
+                    let newPos = value.convert(value.location3D, from: .local, to: entity.parent!)
+                    
+                    // 位置を変更
+                    entity.position = newPos
+                    
+                    // ノード情報も更新
+                    model.updateNodePosition(entity: entity, newPosition: newPos)
                 }
         )
         .gesture(
             TapGesture()
                 .onEnded {
-                    model.addNode(inputText: "aljds", parentId: "ajhsd")
-                    print(model.nodes.count)
+                    model.addCube(text: "aaa", parentId: "aaa")
+                    
                 }
         )
+        //デバッグ用でとりあえず一個
+        .onAppear(){
+            model.addCube(text: "aaa", parentId: "aaa")
+            
+        }
     }
+    
 }
+
 
 #Preview(immersionStyle: .full) {
     ImmersiveView()
