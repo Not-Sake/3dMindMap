@@ -31,7 +31,7 @@ class CreateMesh {
         let physicsMaterial = PhysicsMaterialResource.generate(friction: 0.8, restitution: 0.0)
         nodeEntity.components.set(PhysicsBodyComponent(shapes: nodeEntity.collision!.shapes,
 mass: 0.0,
-                                                       material: physicsMaterial,
+ material: physicsMaterial,
                                                        mode: .dynamic))
         // 3. ユーザーインタラクションのターゲット設定 (InputTargetComponent)
         nodeEntity.components.set(InputTargetComponent(allowedInputTypes: .indirect))
