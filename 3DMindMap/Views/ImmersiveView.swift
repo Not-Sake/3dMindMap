@@ -29,10 +29,17 @@ extension ImmersiveView {
         let newNode = NodeType.init(topic: inputText, parentId: parentId)
         modelContext.insert(newNode)
     }
-
+    func deleteNode(id: String) {
+        if let itemToDelete = nodes.first(where: { $0.id == id }) {
+            modelContext.delete(itemToDelete)
+        }
+    }
 }
 
 #Preview(immersionStyle: .full) {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: NodeType.self, configurations: config)
     ImmersiveView()
         .environment(AppModel())
+        .modelContainer(container)
 }

@@ -22,11 +22,11 @@ struct MindMapApp: App {
                     .environment(appModel)
             }
         }
-        .modelContainer(for: [NodeType.self]) 
         
         ImmersiveSpace(id: appModel.immersiveSpaceID) {
             ImmersiveView()
                 .environment(appModel)
+                .modelContainer(for: [NodeType.self])
                 .onAppear {
                     appModel.immersiveSpaceState = .open
                     avPlayerViewModel.play()
