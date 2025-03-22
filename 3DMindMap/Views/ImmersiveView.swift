@@ -38,24 +38,24 @@ struct ImmersiveView: View {
             }
         }
         .gesture(
-                     DragGesture()
-                         .targetedToAnyEntity()
-                         .onChanged { value in
-                             let entity = value.entity
-                             let newPos = value.convert(value.location3D, from: .local, to: entity.parent!)
-                             
-                             // 位置を変更
-                             entity.position = newPos
-                             
-                             // ノード情報も更新
-                             model.updateNodePosition(entity: entity, newPosition: newPos)
-                         }
-                 )
+            DragGesture()
+                .targetedToAnyEntity()
+                .onChanged { value in
+                    let entity = value.entity
+                    let newPos = value.convert(value.location3D, from: .local, to: entity.parent!)
+                    
+                    // 位置を変更
+                    entity.position = newPos
+                    
+                    // ノード情報も更新
+                    model.updateNodePosition(entity: entity, newPosition: newPos)
+                }
+        )
         .gesture(
             TapGesture()
                 .onEnded {
                     model.addCube(text: "aaa", parentId: "aaa")
-                  
+                    
                 }
         )
         //デバッグ用でとりあえず一個
