@@ -12,7 +12,6 @@ import RealityKit
 final class ImmersiveViewModel {
     
     public static let shared = ImmersiveViewModel()
-        
     var nodes: [NodeType] = []
     var cubes: [Entity] = []
     var inputText: String = ""
@@ -27,19 +26,24 @@ final class ImmersiveViewModel {
         nodes.append(NodeType(id: id, topic: inputText, parentId: parentId, position: position))
     }
     
-    func addEntity(id: String, posision: Point3D) -> Entity {
+    func addEntity(id: String, posision: Point3D, text: String) -> Entity {
         let entity = CreateMesh().createNode(id: id, position: posision)
 
         entity.name = id
         entity.components.set(InputTargetComponent(allowedInputTypes: .indirect))
         entity.components.set(HoverEffectComponent(.highlight(.default)))
         
+        // テキストの作成
+        let textEntity = CreateMesh().createTextEntity(text: text, position:posision)
+
+        entity.addChild(textEntity) // キューブの子要素としてテキストを追加
+
         contentEntity.addChild(entity)
         
         return entity
     }
     
-    func addCube() {
+    func addCube(text:String) {
         print("called addCube")
         let id = UUID().uuidString
         print("selectedNodeId: \(selectedNodeId)")
@@ -47,7 +51,8 @@ final class ImmersiveViewModel {
         print("new position: \(position)")
         let newCube = addEntity(
             id: id,
-            posision: position
+            posision: position,
+            text:text
         )
         cubes.append(newCube)
         addNode(inputText: inputText, parentId: selectedNodeId, position: position, id: id)
@@ -55,7 +60,7 @@ final class ImmersiveViewModel {
         dump(nodes)
     }
     
-    func addInitialCube() {
+    func addInitialCube(text: String) {
         let x: Float = 0
         let y: Float = 1.2
         let z: Float = 1.2
@@ -63,7 +68,7 @@ final class ImmersiveViewModel {
         
         let newCube = addEntity(
             id: id,
-            posision: Point3D(x: x, y: y, z: z)
+            posision: Point3D(x: x, y: y, z: z), text: text
         )
         cubes.append(newCube)
         addNode(inputText: inputText, parentId: "", position: Point3D(x: x, y: y, z: z), id: id)

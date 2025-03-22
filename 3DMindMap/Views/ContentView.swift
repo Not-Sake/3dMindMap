@@ -30,7 +30,7 @@ struct ContentView: View {
                 }
                 Button(action: {
                     isFocused = false
-                    model.addCube()
+                    model.addCube(text: model.inputText)
                     
                     Task { @MainActor in
                         switch appModel.immersiveSpaceState {

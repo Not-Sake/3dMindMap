@@ -57,24 +57,14 @@ struct ImmersiveView: View {
             TapGesture()
                 .targetedToAnyEntity()
                 .onEnded { value in
-//                    if model.showTextField {
-                        let entity = value.entity
-                        let entityId = entity.name
-                        model.selectedNodeId = entityId
-                        print("selected", model.selectedNodeId)
-                        openWindow(value: nextWindowID.id)
-//                    }
+                    let entity = value.entity
+                    let entityId = entity.name
+                    model.selectedNodeId = entityId
+                    print("selected", model.selectedNodeId)
+                    openWindow(value: nextWindowID.id)
+                    
                 }
         )
-        //デバッグ用でとりあえず一個
-        .onAppear(){
-            if model.nodes.isEmpty {
-                model.addInitialCube()
-            }
-        }
-//        .onChange(of: isTextFieldHidden){
-//            openWindow(value: nextWindowID.id)
-//        }
     }
 }
 
