@@ -32,6 +32,7 @@ class ImmersiveViewModel {
 
         entity.name = id
         entity.components.set(InputTargetComponent(allowedInputTypes: .indirect))
+        entity.components.set(HoverEffectComponent(.highlight(.default)))
         
         contentEntity.addChild(entity)
         
