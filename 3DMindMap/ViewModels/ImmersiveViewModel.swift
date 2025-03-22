@@ -11,6 +11,12 @@ import RealityKit
 @Observable
 class ImmersiveViewModel {
     
+    var nodes: [NodeType] = []
+    
+    func addNode(inputText: String, parentId: String) {
+        nodes.append(.init(topic: inputText, parentId: parentId))
+    }
+    
     private var contentEntity = Entity()
     
     func setupContentEntity() -> Entity {

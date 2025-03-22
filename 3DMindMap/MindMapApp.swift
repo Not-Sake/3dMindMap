@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftData
 
 @main
 struct MindMapApp: App {
@@ -26,7 +25,6 @@ struct MindMapApp: App {
         ImmersiveSpace(id: appModel.immersiveSpaceID) {
             ImmersiveView()
                 .environment(appModel)
-                .modelContainer(for: [NodeType.self])
                 .onAppear {
                     appModel.immersiveSpaceState = .open
                     avPlayerViewModel.play()
