@@ -13,20 +13,18 @@ class ImmersiveViewModel {
     
     var nodes: [NodeType] = []
     var cubes: [Entity] = []
-    func addNode(inputText: String, parentId: String, position: Point3D) {
-        nodes.append(NodeType(topic: inputText, parentId: parentId, position: position))
-    }
     
     private var contentEntity = Entity()
     
     func setupContentEntity() -> Entity {
         return contentEntity
     }
-    func getTargetEntity(name: String) -> Entity? {
-        return contentEntity.children.first { $0.name == name}
+    
+    func addNode(inputText: String, parentId: String, position: Point3D) {
+        nodes.append(NodeType(topic: inputText, parentId: parentId, position: position))
     }
     
-    func addCube(name: String, posision: Point3D) -> Entity {
+    func addCube(name: String = "Cube", posision: Point3D) -> Entity {
         let entity = ModelEntity(
             mesh: .generateBox(size: 0.5, cornerRadius: 0),
             materials: [SimpleMaterial(color: .red, isMetallic: false)],
@@ -35,7 +33,6 @@ class ImmersiveViewModel {
         )
         
         entity.name = name
-        
         entity.components.set(InputTargetComponent(allowedInputTypes: .indirect))
         
         let material = PhysicsMaterialResource.generate(friction: 0.8, restitution: 0.0)
@@ -45,25 +42,36 @@ class ImmersiveViewModel {
                                                    mode: .dynamic))
         
         entity.position = SIMD3(posision)
-        
         contentEntity.addChild(entity)
         
         return entity
     }
+    
     func addCube(text: String, parentId: String) {
         let x = Float.random(in: -5 ... 5)
         let y = Float.random(in: -5 ... 5)
         let z = Float.random(in: -5 ... 5)
+        
         let newCube = addCube(
-            name: "Cube",
-            posision: Point3D(x: x,
-                              y:y,
-                              z: z
-                             )
-            
+            name: "Cube_\(nodes.count)",
+            posision: Point3D(x: x, y: y, z: z)
         )
+        
         cubes.append(newCube)
-        addNode(inputText: text, parentId: parentId, position: Point3D(x: x, y:y, z: z) )
+        addNode(inputText: "Cube_\(nodes.count)", parentId: parentId, position: Point3D(x: x, y: y, z: z))
+        
+        
     }
+    
+    
+    func updateNodePosition(entity: Entity, newPosition: SIMD3<Float>) {
+        
+        if let index = nodes.firstIndex(where: { "\($0.topic)" == entity.name }) {
+            nodes[index].position = Point3D(x: newPosition.x, y: newPosition.y, z: newPosition.z)
+            
+        }
+        
+    }
+    
+    
 }
-
