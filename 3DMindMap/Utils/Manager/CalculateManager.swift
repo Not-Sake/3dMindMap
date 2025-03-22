@@ -8,13 +8,13 @@
 import SwiftUI
 
 class CalculatorManager {
+    //MARK: - 新しいNodeの位置を計算
     //Node間の最接近距離
     let minDistance: Double = 0.22
     //同距離間でのランダム試行回数
     let maxTryCount: Int = 50
     //ある一定の距離で最適な位置が見つからなかった場合に広げる距離
     let expandDistance: Double = 0.06
-    
     
     public func newPosition(parentPosition: Point3D, nodes: [NodeType]) -> Point3D {
         var newPosition: Point3D = .zero
@@ -52,5 +52,13 @@ class CalculatorManager {
     
     private func checkDistance(from p1: Point3D, to p2: Point3D) -> Double {
         return p1.distance(to: p2)
+    }
+    
+    //MARK: - Nodeの向きを計算
+    
+    public func calculateNodeDirection(position: Point3D) -> CGFloat {
+        let radiant: CGFloat = atan2(position.z, position.x)
+        let rotate = radiant - CGFloat.pi / 2
+        return rotate
     }
 }
