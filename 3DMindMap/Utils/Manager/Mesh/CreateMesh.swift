@@ -24,7 +24,7 @@ class CreateMesh {
         // 1. 衝突判定 (CollisionShapeComponent)
         let collisionShape = ShapeResource.generateBox(size: [0.3, 0.2, 0.1])
         nodeEntity.components.set(CollisionComponent(shapes: [collisionShape],
-                                                     isStatic: false,
+  isStatic: false,
                                                      filter: .default))
         
         // 2. 物理特性の設定 (PhysicsBodyComponent)
