@@ -12,14 +12,8 @@ struct ImmersiveView: View {
     @State private var cubes: [Entity] = []
     @State var model = ImmersiveViewModel()
     var body: some View {
-        Button("キューブを追加") {
-            model.addCube()
-        }
-        .padding()
-        .background(Color.blue)
-        .foregroundColor(.white)
-        .clipShape(Capsule())
         RealityView { content in
+            
             
             let scene = model.setupContentEntity()
             content.add(scene)
