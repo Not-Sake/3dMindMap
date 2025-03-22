@@ -11,16 +11,28 @@ import RealityKit
 import RealityKitContent
 
 struct ImmersiveView: View {
+    @Environment(AppModel.self) var appModel
+    @State var model = ImmersiveViewModel()
+    @State var cube = Entity()
     @Environment(\.modelContext) var modelContext
     @Query var nodes: [NodeType]
 
     var body: some View {
         RealityView { content in
             // Add the initial RealityKit content
-            if let immersiveContentEntity = try? await Entity(named: "Immersive", in: realityKitContentBundle) {
-                content.add(immersiveContentEntity)
-            }
+            
+            content.add(model.setupContentEntity())
+            cube = model.addCube(name: "Cube1")
+            
         }
+        .gesture(
+            DragGesture()
+                .targetedToEntity(cube)
+                .onChanged { value in
+                    cube.position = value.convert(value.location3D, from: .local, to: cube.parent!)
+                }
+        )
+        
     }
 }
 
