@@ -11,7 +11,7 @@ import RealityKitContent
 struct ImmersiveView: View {
     @State private var cubes: [Entity] = []
     @State var model = ImmersiveViewModel()
-    @State var cube = Entity()
+ 
     @State var isTextFieldHidden = false
     @State var nextWindowID = NewWindowID(id: 1)
     
