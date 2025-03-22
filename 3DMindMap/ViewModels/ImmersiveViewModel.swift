@@ -20,11 +20,11 @@ class ImmersiveViewModel {
         return contentEntity
     }
     
-    func addNode(inputText: String, parentId: String, position: Point3D) {
-        nodes.append(NodeType(topic: inputText, parentId: parentId, position: position))
+    func addNode(inputText: String, parentId: String, position: Point3D, id: String) {
+        nodes.append(NodeType(id: id, topic: inputText, parentId: parentId, position: position))
     }
     
-    func addCube(name: String = "Cube", posision: Point3D) -> Entity {
+    func addEntity(id: String, posision: Point3D) -> Entity {
         let entity = ModelEntity(
             mesh: .generateBox(size: 0.5, cornerRadius: 0),
             materials: [SimpleMaterial(color: .red, isMetallic: false)],
@@ -32,7 +32,7 @@ class ImmersiveViewModel {
             mass: 0.0
         )
         
-        entity.name = name
+        entity.name = id
         entity.components.set(InputTargetComponent(allowedInputTypes: .indirect))
         
         let material = PhysicsMaterialResource.generate(friction: 0.8, restitution: 0.0)
@@ -51,25 +51,26 @@ class ImmersiveViewModel {
         let x = Float.random(in: -5 ... 5)
         let y = Float.random(in: -5 ... 5)
         let z = Float.random(in: -5 ... 5)
+        let id = UUID().uuidString
         
-        let newCube = addCube(
-            name: "Cube_\(nodes.count)",
+        let newCube = addEntity(
+            id: id,
             posision: Point3D(x: x, y: y, z: z)
         )
         
         cubes.append(newCube)
-        addNode(inputText: "Cube_\(nodes.count)", parentId: parentId, position: Point3D(x: x, y: y, z: z))
-        
+        addNode(inputText: "打たれたテキストはここ", parentId: parentId, position: Point3D(x: x, y: y, z: z), id: id)
         
     }
     
     
     func updateNodePosition(entity: Entity, newPosition: SIMD3<Float>) {
-        
-        if let index = nodes.firstIndex(where: { "\($0.topic)" == entity.name }) {
+        print(nodes.first!.id, entity.name)
+        if let index = nodes.firstIndex(where: { "\($0.id)" == entity.name }) {
             nodes[index].position = Point3D(x: newPosition.x, y: newPosition.y, z: newPosition.z)
             
         }
+        print(nodes.first!.position)
         
     }
     
