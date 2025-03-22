@@ -13,14 +13,11 @@ struct MindMapApp: App {
     @State private var avPlayerViewModel = AVPlayerViewModel()
     
     var body: some Scene {
-        WindowGroup {
-            if avPlayerViewModel.isPlaying {
-                AVPlayerView(viewModel: avPlayerViewModel)
-            } else {
-                ContentView()
-                    .environment(appModel)
-            }
+        WindowGroup("New Window", for: NewWindowID.ID.self) { $id in
+            ContentView(id: id ?? 1)
+                .environment(appModel)
         }
+        .defaultSize(CGSize(width: 400, height: 5))
         
         ImmersiveSpace(id: appModel.immersiveSpaceID) {
             ImmersiveView()
@@ -35,11 +32,5 @@ struct MindMapApp: App {
                 }
         }
         .immersionStyle(selection: .constant(.full), in: .full)
-        
-        WindowGroup("New Window", for: NewWindowID.ID.self) { $id in
-            TextFieldView(id: id ?? 1)
-            
-        }
-        .defaultSize(CGSize(width: 400, height: 5))
     }
 }

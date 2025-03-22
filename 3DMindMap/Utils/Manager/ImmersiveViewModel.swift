@@ -9,14 +9,14 @@ import SwiftUI
 import RealityKit
 
 @Observable
-class ImmersiveViewModel {
+final class ImmersiveViewModel {
     
+    public static let shared = ImmersiveViewModel()
+
     var nodes: [NodeType] = []
     var cubes: [Entity] = []
     var inputText: String = ""
-    
-    
-    
+    var selectedNodeId: String = ""
     private var contentEntity = Entity()
     
     func setupContentEntity() -> Entity {
@@ -36,56 +36,49 @@ class ImmersiveViewModel {
         
         // テキストの作成
         let textEntity = CreateMesh().createTextEntity(text: text, position:posision)
-        
+
         entity.addChild(textEntity) // キューブの子要素としてテキストを追加
-        
+
         contentEntity.addChild(entity)
         
         return entity
     }
-
-    func addCube(text: String, parentId: String) {
-        let x = Float.random(in: -5 ... 5)
-        let y = Float.random(in: -5 ... 5)
-        let z = Float.random(in: -5 ... 5)
+    
+    func addCube(text:String) {
+        print("called addCube")
         let id = UUID().uuidString
-        
+        print("selectedNodeId: \(selectedNodeId)")
+        let position = CalculatorManager().newPosition(parentId: selectedNodeId, nodes: nodes)
+        print("new position: \(position)")
         let newCube = addEntity(
             id: id,
-            posision: Point3D(x: x, y: y, z: z), text: "わん"
+            posision: position,
+            text:text
         )
-        
         cubes.append(newCube)
-        addNode(inputText: "打たれたテキストはここ", parentId: parentId, position: Point3D(x: x, y: y, z: z), id: id)
-        
+        addNode(inputText: inputText, parentId: selectedNodeId, position: position, id: id)
+        inputText = ""
         dump(nodes)
     }
     
     func addInitialCube(text: String) {
         let x: Float = 0
-        let y: Float = 1.5
-        let z: Float = -4
+        let y: Float = 1.2
+        let z: Float = 1.2
         let id = UUID().uuidString
         
         let newCube = addEntity(
             id: id,
-            posision: Point3D(x: x, y: y, z: z), text: "aaaaaaaaa"
+            posision: Point3D(x: x, y: y, z: z), text: text
         )
-        
         cubes.append(newCube)
-        addNode(inputText: "打たれたテキストはここ", parentId: "", position: Point3D(x: x, y: y, z: z), id: id)
+        addNode(inputText: inputText, parentId: "", position: Point3D(x: x, y: y, z: z), id: id)
+        inputText = ""
     }
-    
     
     func updateNodePosition(entity: Entity, newPosition: SIMD3<Float>) {
-        print(nodes.first!.id, entity.name)
         if let index = nodes.firstIndex(where: { "\($0.id)" == entity.name }) {
             nodes[index].position = Point3D(x: newPosition.x, y: newPosition.y, z: newPosition.z)
-            
         }
-        print(nodes.first!.position)
-        
     }
-    
-    
 }
