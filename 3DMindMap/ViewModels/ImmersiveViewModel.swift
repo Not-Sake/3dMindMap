@@ -25,7 +25,7 @@ class ImmersiveViewModel {
     }
     
     func addEntity(id: String, posision: Point3D) -> Entity {
-        let entity = CreateMesh().createNode(position: posision)
+        let entity = CreateMesh().createNode(id: id, position: posision)
 
         entity.name = id
         entity.components.set(InputTargetComponent(allowedInputTypes: .indirect))
