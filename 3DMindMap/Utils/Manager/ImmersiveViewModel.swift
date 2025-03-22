@@ -28,16 +28,17 @@ final class ImmersiveViewModel {
     
     func addEntity(id: String, posision: Point3D, text: String) -> Entity {
         let entity = CreateMesh().createNode(id: id, position: posision)
-
+        
         entity.name = id
         entity.components.set(InputTargetComponent(allowedInputTypes: .indirect))
         entity.components.set(HoverEffectComponent(.highlight(.default)))
         
+        entity.orientation = simd_quatf(angle: 0, axis: [0, 1, 0]) // 向きをリセット
         // テキストの作成
         let textEntity = CreateMesh().createTextEntity(text: text, position:posision)
-
+        
         entity.addChild(textEntity) // キューブの子要素としてテキストを追加
-
+        
         contentEntity.addChild(entity)
         
         return entity

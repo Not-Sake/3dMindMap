@@ -25,9 +25,11 @@ struct MindMapApp: App {
                 .onAppear {
                     appModel.immersiveSpaceState = .open
                     avPlayerViewModel.play()
+                    appModel.isContentViewActive = false
                 }
                 .onDisappear {
                     appModel.immersiveSpaceState = .closed
+                    appModel.isContentViewActive = true
                     avPlayerViewModel.reset()
                 }
         }

@@ -18,6 +18,7 @@ struct ContentView: View {
     @FocusState private var isFocused: Bool
     
     var body: some View {
+        @Bindable var viewModel = appModel
         VStack {
             HStack {
                 TextField(
@@ -76,7 +77,18 @@ struct ContentView: View {
             }
             .padding(.leading, 20)
             .cornerRadius(.infinity)
+          
+            }
+        .onChange(of: appModel.immersiveSpaceState) { newState in
+            // immersiveSpaceStateが.closedに変更された時に、ContentViewを開く
+            if newState == .closed {
+                appModel.isContentViewActive = true
+            }
         }
+        .navigationDestination(isPresented: $viewModel.isContentViewActive) {
+            ContentView(id: id)
+        }
+    
     }
 }
 

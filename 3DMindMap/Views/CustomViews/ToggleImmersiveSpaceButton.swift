@@ -54,5 +54,6 @@ struct ToggleImmersiveSpaceButton: View {
         .disabled(appModel.immersiveSpaceState == .inTransition)
         .animation(.none, value: 0)
         .fontWeight(.semibold)
+        
     }
 }

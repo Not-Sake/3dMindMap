@@ -20,20 +20,21 @@ class CreateMesh {
         nodeEntity.transform.translation = SIMD3(position)
         nodeEntity.name = id
         
+        nodeEntity.components.set(BillboardComponent())
         // ドラッグ可能にするための必須コンポーネントを追加
         // 1. 衝突判定 (CollisionShapeComponent)
         let collisionShape = ShapeResource.generateBox(size: [0.3, 0.2, 0.1])
         nodeEntity.components.set(CollisionComponent(shapes: [collisionShape],
-  isStatic: false,
-   filter: .default))
+                                                     isStatic: false,
+                                                     filter: .default))
         
         // 2. 物理特性の設定 (PhysicsBodyComponent)
-        let physicsMaterial = PhysicsMaterialResource.generate(friction: 0.8, restitution: 0.0)
-        nodeEntity.components.set(PhysicsBodyComponent(shapes: nodeEntity.collision!.shapes,
-mass: 0.0,
- material: physicsMaterial,
-                                                       mode: .dynamic))
-        // 3. ユーザーインタラクションのターゲット設定 (InputTargetComponent)
+        //   let physicsMaterial = PhysicsMaterialResource.generate(friction: 0.8, restitution: 0.0)
+        //        nodeEntity.components.set(PhysicsBodyComponent(shapes: nodeEntity.collision!.shapes,
+        //                                                       mass: 0.0,
+        //                                                       material: physicsMaterial,
+        //                                                       mode: .dynamic))
+        //        // 3. ユーザーインタラクションのターゲット設定 (InputTargetComponent)
         nodeEntity.components.set(InputTargetComponent(allowedInputTypes: .indirect))
         
         return nodeEntity
@@ -51,12 +52,13 @@ mass: 0.0,
         let textMaterial = SimpleMaterial(color: .black, isMetallic: false)
         let textEntity = ModelEntity(mesh: textMesh, materials: [textMaterial])
         let bounding = textEntity.visualBounds(relativeTo: nil)
-
-           // **テキストを中央に配置**
-           textEntity.position.x = -bounding.center.x
-           textEntity.position.y = -bounding.center.y
+        
+        // **テキストを中央に配置**
+        textEntity.position.x = -bounding.center.x
+        textEntity.position.y = -bounding.center.y
         textEntity.position.z = 0.02
         
+        //  textEntity.components.set(BillboardComponent())
         // 文字の向きを修正
         textEntity.orientation = simd_quatf(angle: 0, axis: [0, 1, 0])
         
