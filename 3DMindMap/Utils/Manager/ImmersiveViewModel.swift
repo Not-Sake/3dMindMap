@@ -27,18 +27,23 @@ class ImmersiveViewModel {
         nodes.append(NodeType(id: id, topic: inputText, parentId: parentId, position: position))
     }
     
-    func addEntity(id: String, posision: Point3D) -> Entity {
+    func addEntity(id: String, posision: Point3D, text: String) -> Entity {
         let entity = CreateMesh().createNode(id: id, position: posision)
 
         entity.name = id
         entity.components.set(InputTargetComponent(allowedInputTypes: .indirect))
         entity.components.set(HoverEffectComponent(.highlight(.default)))
         
+        // テキストの作成
+        let textEntity = CreateMesh().createTextEntity(text: text, position:posision)
+        
+        entity.addChild(textEntity) // キューブの子要素としてテキストを追加
+        
         contentEntity.addChild(entity)
         
         return entity
     }
-    
+
     func addCube(text: String, parentId: String) {
         let x = Float.random(in: -5 ... 5)
         let y = Float.random(in: -5 ... 5)
@@ -47,7 +52,7 @@ class ImmersiveViewModel {
         
         let newCube = addEntity(
             id: id,
-            posision: Point3D(x: x, y: y, z: z)
+            posision: Point3D(x: x, y: y, z: z), text: "わん"
         )
         
         cubes.append(newCube)
@@ -64,7 +69,7 @@ class ImmersiveViewModel {
         
         let newCube = addEntity(
             id: id,
-            posision: Point3D(x: x, y: y, z: z)
+            posision: Point3D(x: x, y: y, z: z), text: "aaaaaaaaa"
         )
         
         cubes.append(newCube)
