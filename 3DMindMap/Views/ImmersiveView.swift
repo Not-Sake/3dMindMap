@@ -55,13 +55,11 @@ struct ImmersiveView: View {
             TapGesture()
                 .onEnded {
                     model.addCube(text: "aaa", parentId: "aaa")
-                    
                 }
         )
         //デバッグ用でとりあえず一個
         .onAppear(){
-            model.addCube(text: "aaa", parentId: "aaa")
-            
+            model.addInitialCube(text: "aaa", parentId: "aaa")
         }
     }
     
