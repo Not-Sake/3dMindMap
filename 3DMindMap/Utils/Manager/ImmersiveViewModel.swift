@@ -12,7 +12,6 @@ import RealityKit
 final class ImmersiveViewModel {
     
     public static let shared = ImmersiveViewModel()
-
     var nodes: [NodeType] = []
     var cubes: [Entity] = []
     var inputText: String = ""
