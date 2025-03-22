@@ -53,13 +53,16 @@ struct ImmersiveView: View {
         )
         .gesture(
             TapGesture()
-                .onEnded {
-                    model.addCube(text: "aaa", parentId: "aaa")
+                .targetedToAnyEntity()
+                .onEnded { value in
+                    let entity = value.entity
+                    let entityId = entity.name
+                    model.addCube(text: "aaa", parentId: entityId)
                 }
         )
         //デバッグ用でとりあえず一個
         .onAppear(){
-            model.addInitialCube(text: "aaa", parentId: "aaa")
+            model.addInitialCube(text: "aaa")
         }
     }
     
