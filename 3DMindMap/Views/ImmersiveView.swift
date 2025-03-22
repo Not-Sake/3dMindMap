@@ -5,12 +5,14 @@
 //  Created by TAIGA ITO on 2025/03/21.
 //
 
+import SwiftData
 import SwiftUI
 import RealityKit
 import RealityKitContent
 
 struct ImmersiveView: View {
-    @Environment(AppModel.self) var appModel
+    @Environment(\.modelContext) var modelContext
+    @Query var nodes: [NodeType]
 
     var body: some View {
         RealityView { content in
@@ -20,6 +22,14 @@ struct ImmersiveView: View {
             }
         }
     }
+}
+
+extension ImmersiveView {
+    func addNode(inputText: String, parentId: String) {
+        let newNode = NodeType.init(topic: inputText, parentId: parentId)
+        modelContext.insert(newNode)
+    }
+
 }
 
 #Preview(immersionStyle: .full) {
