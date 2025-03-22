@@ -11,6 +11,7 @@ class NodeType {
     var id: String
     var topic: String
     var parentId: String
+    var position: Point3D = .zero
     var children: [NodeType] = []
     
     init(topic: String, parentId: String) {
