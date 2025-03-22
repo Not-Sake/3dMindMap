@@ -48,11 +48,15 @@ struct ImmersiveView: View {
         .gesture(
             TapGesture()
                 .onEnded {
-                    model.addCube()
-                    model.addNode(inputText: "aljds", parentId: "ajhsd")
-                    print(model.nodes.count)
+                    model.addCube(text: "aaa", parentId: "aaa")
+                  
                 }
         )
+        //デバッグ用でとりあえず一個
+        .onAppear(){
+            model.addCube(text: "aaa", parentId: "aaa")
+            
+        }
     }
     
 }

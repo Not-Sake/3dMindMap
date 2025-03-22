@@ -11,13 +11,14 @@ class NodeType {
     var id: String
     var topic: String
     var parentId: String
-    var position: Point3D = .zero
+    var position: Point3D
     var children: [NodeType] = []
     
-    init(topic: String, parentId: String) {
+    init(topic: String, parentId: String, position: Point3D) {
         self.id = UUID().uuidString
         self.topic = topic
         self.parentId = parentId
         self.children = []
+        self.position = position
     }
 }

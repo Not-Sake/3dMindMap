@@ -13,8 +13,8 @@ class ImmersiveViewModel {
     
     var nodes: [NodeType] = []
     var cubes: [Entity] = []
-    func addNode(inputText: String, parentId: String) {
-        nodes.append(.init(topic: inputText, parentId: parentId))
+    func addNode(inputText: String, parentId: String, position: Point3D) {
+        nodes.append(NodeType(topic: inputText, parentId: parentId, position: position))
     }
     
     private var contentEntity = Entity()
@@ -50,16 +50,20 @@ class ImmersiveViewModel {
         
         return entity
     }
-    func addCube() {
+    func addCube(text: String, parentId: String) {
+        let x = Float.random(in: -5 ... 5)
+        let y = Float.random(in: -5 ... 5)
+        let z = Float.random(in: -5 ... 5)
         let newCube = addCube(
             name: "Cube",
-            posision: Point3D(x: Float.random(in: -5 ... 5),
-                              y: Float.random(in: -5 ... 5),
-                              z: Float.random(in: -5 ... 5)
+            posision: Point3D(x: x,
+                              y:y,
+                              z: z
                              )
             
         )
         cubes.append(newCube)
+        addNode(inputText: text, parentId: parentId, position: Point3D(x: x, y:y, z: z) )
     }
 }
 
