@@ -13,6 +13,9 @@ class ImmersiveViewModel {
     
     var nodes: [NodeType] = []
     var cubes: [Entity] = []
+    var inputText: String = ""
+    
+    
     
     private var contentEntity = Entity()
     
