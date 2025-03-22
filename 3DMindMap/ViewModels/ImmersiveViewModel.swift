@@ -28,23 +28,11 @@ class ImmersiveViewModel {
     }
     
     func addEntity(id: String, posision: Point3D) -> Entity {
-        let entity = ModelEntity(
-            mesh: .generateBox(size: 0.5, cornerRadius: 0),
-            materials: [SimpleMaterial(color: .red, isMetallic: false)],
-            collisionShape: .generateBox(size: SIMD3<Float>(repeating: 0.5)),
-            mass: 0.0
-        )
-        
+        let entity = CreateMesh().createNode(id: id, position: posision)
+
         entity.name = id
         entity.components.set(InputTargetComponent(allowedInputTypes: .indirect))
         
-        let material = PhysicsMaterialResource.generate(friction: 0.8, restitution: 0.0)
-        entity.components.set(PhysicsBodyComponent(shapes: entity.collision!.shapes,
-                                                   mass: 0.0,
-                                                   material: material,
-                                                   mode: .dynamic))
-        
-        entity.position = SIMD3(posision)
         contentEntity.addChild(entity)
         
         return entity
@@ -63,7 +51,21 @@ class ImmersiveViewModel {
         
         cubes.append(newCube)
         addNode(inputText: "打たれたテキストはここ", parentId: parentId, position: Point3D(x: x, y: y, z: z), id: id)
+    }
+    
+    func addInitialCube(text: String, parentId: String) {
+        let x: Float = 0
+        let y: Float = 1
+        let z: Float = -1
+        let id = UUID().uuidString
         
+        let newCube = addEntity(
+            id: id,
+            posision: Point3D(x: x, y: y, z: z)
+        )
+        
+        cubes.append(newCube)
+        addNode(inputText: "打たれたテキストはここ", parentId: parentId, position: Point3D(x: x, y: y, z: z), id: id)
     }
     
     
