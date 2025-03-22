@@ -12,6 +12,20 @@ struct ImmersiveView: View {
     @State private var cubes: [Entity] = []
     @State var model = ImmersiveViewModel()
     var body: some View {
+        // 背景追加
+        RealityView { content in
+            var material = UnlitMaterial()
+            guard let resource = try? TextureResource.load(named: "space") else {
+                fatalError("Couldn't load texture resource.")
+            }
+            material.color = .init(texture: .init(resource))
+            
+            let entity = Entity()
+            entity.components.set(ModelComponent(mesh: .generateSphere(radius: 1000), materials: [material]))
+            
+            entity.scale *= SIMD3(repeating: -1)
+            content.add(entity)
+        }
         RealityView { content in
             
             
