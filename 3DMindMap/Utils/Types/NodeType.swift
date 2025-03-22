@@ -6,9 +6,7 @@
 //
 
 import SwiftUI
-import SwiftData
 
-@Model
 class NodeType {
     var id: String
     var topic: String
