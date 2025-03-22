@@ -33,7 +33,6 @@ class CreateMesh {
                                                        mass: 0.0,
                                                        material: physicsMaterial,
                                                        mode: .dynamic))
-        
         // 3. ユーザーインタラクションのターゲット設定 (InputTargetComponent)
         nodeEntity.components.set(InputTargetComponent(allowedInputTypes: .indirect))
         
