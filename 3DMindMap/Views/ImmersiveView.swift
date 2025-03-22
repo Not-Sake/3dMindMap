@@ -60,19 +60,19 @@ struct ImmersiveView: View {
         .gesture(
             TapGesture()
                 .onEnded {
-                    
+                   
                     if isTextFieldHidden {
                         isTextFieldHidden.toggle()
                         model.addCube(text: "aaa", parentId: "aaa")
                     }else{
                         isTextFieldHidden.toggle()
                     }
+
                 }
         )
         //デバッグ用でとりあえず一個
         .onAppear(){
-            model.addCube(text: "aaa", parentId: "aaa")
-            
+            model.addInitialCube(text: "aaa", parentId: "aaa")
         }
         .onChange(of: isTextFieldHidden){
             openWindow(value: nextWindowID.id)
