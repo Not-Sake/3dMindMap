@@ -104,16 +104,34 @@ struct ImmersiveView: View {
     
     
     func monitorHeartGesture() async {
-        if model.isTextField == true{
+       
             while true {
                 if let _ = gestureModel.computeTransformOfUserPerformedHeartGesture() {
                     print("Heartできた！!")
-                    model.inputTexts(texts: ["りんご","バナナ","きゅうり"])
+                    
+                    do{
+                        let node = model.findNode(id: model.selectedNodeId)
+                        if node != nil {
+                            
+                            let topic = node?.topic
+                            print(node?.topic,"aaaaa")
+                            let  texts =  await model.getIdeas(text: topic ?? "")
+                            model.inputTexts(texts: texts)
+                            sleep(5)
+                        }
+                        else{
+                            print(node?.topic)
+                        }
+                    }
                 }
+                    
                 try? await Task.sleep(nanoseconds: 500_000_000) // 0.5秒ごとにチェック
             }
-        }
+        
     }
+    private func hideKeyboard() {
+           UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+       }
 }
 
 #Preview(immersionStyle: .full) {

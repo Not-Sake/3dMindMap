@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		72AC59F42D8FC19C00B3F30D /* .env in Resources */ = {isa = PBXBuildFile; fileRef = 72AC59F32D8FC19800B3F30D /* .env */; };
 		94CD8A7D2D8DB604009FA3AA /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = 94CD8A7C2D8DB604009FA3AA /* RealityKitContent */; };
 		9EF913112D8FAB8000610E46 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 9EF913102D8FAB8000610E46 /* GoogleGenerativeAI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		72AC59F32D8FC19800B3F30D /* .env */ = {isa = PBXFileReference; lastKnownFileType = text; path = .env; sourceTree = "<group>"; };
 		94CD8A772D8DB604009FA3AA /* 3DMindMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 3DMindMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		94CD8A7B2D8DB604009FA3AA /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -53,6 +55,7 @@
 		94CD8A6E2D8DB604009FA3AA = {
 			isa = PBXGroup;
 			children = (
+				72AC59F32D8FC19800B3F30D /* .env */,
 				94CD8A792D8DB604009FA3AA /* 3DMindMap */,
 				94CD8A7A2D8DB604009FA3AA /* Packages */,
 				94CD8A782D8DB604009FA3AA /* Products */,
@@ -144,6 +147,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				72AC59F42D8FC19C00B3F30D /* .env in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

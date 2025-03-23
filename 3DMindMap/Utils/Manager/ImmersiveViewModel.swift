@@ -142,6 +142,7 @@ final class ImmersiveViewModel {
     func getIdeas(text: String) async -> [String] {
         let repository = GetIdeasRepository(content: text)
         let ideas = await repository.get() ?? []
+        print(ideas)
         return ideas
     }
 

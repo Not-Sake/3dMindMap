@@ -3,15 +3,14 @@ import Foundation
 
 let env = try? LoadEnv()
 
-let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: "")
+let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: "AIzaSyB8PMdY-uHFRWZD79lOxjWIuateNsAFIME")
 
 struct GetIdeasRepository {
     let content: String
     
     func get() async -> [String]? {
             let prompt = """
-            Provide three words associated with the given word, in a JSON format resembling an array of strings.
-            Word: \(content)
+            Three minor words of minor types related to a given word are provided in JSON format, similar to an array of strings: \(content)
             """
             
             do {
