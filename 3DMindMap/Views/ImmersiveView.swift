@@ -29,7 +29,6 @@ struct ImmersiveView: View {
             entity.scale *= SIMD3(repeating: -1)
             content.add(entity)
             
-            
             let scene = model.setupContentEntity()
             content.add(scene)
             
@@ -67,8 +66,6 @@ struct ImmersiveView: View {
         )
     }
 }
-
-
 
 #Preview(immersionStyle: .full) {
     ImmersiveView()

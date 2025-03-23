@@ -29,16 +29,16 @@ class CreateMesh {
         // 🪝 位置と名前の設定
         nodeEntity.transform.translation = SIMD3(position)
         nodeEntity.name = id
-       
-        // ✅ 衝突判定
+        nodeEntity.components.set(BillboardComponent())
+        // ドラッグ可能にするための必須コンポーネントを追加
+        // 1. 衝突判定 (CollisionShapeComponent)
         let collisionShape = ShapeResource.generateBox(size: [0.3, 0.2, 0.1])
         nodeEntity.components.set(CollisionComponent(shapes: [collisionShape], isStatic: false, filter: .default))
-       
-        // ✅ 物理特性
-        let physicsMaterial = PhysicsMaterialResource.generate(friction: 0.8, restitution: 0.0)
-        nodeEntity.components.set(PhysicsBodyComponent(shapes: nodeEntity.collision!.shapes, mass: 0.0, material: physicsMaterial, mode: .dynamic))
-       
-        // ✅ ユーザーインタラクションのターゲット
+        
+        // 2. 物理特性の設定 (PhysicsBodyComponent)
+//        let physicsMaterial = PhysicsMaterialResource.generate(friction: 0.8, restitution: 0.0)
+//        nodeEntity.components.set(PhysicsBodyComponent(shapes: nodeEntity.collision!.shapes, mass: 0.0, material: physicsMaterial, mode: .dynamic))
+        // 3. ユーザーインタラクションのターゲット設定 (InputTargetComponent)
         nodeEntity.components.set(InputTargetComponent(allowedInputTypes: .indirect))
        
         return nodeEntity
@@ -66,7 +66,6 @@ class CreateMesh {
         textEntity.orientation = simd_quatf(angle: 0, axis: [0, 1, 0])
         
         //  textEntity.transform.translation = SIMD3(position)
-        
         
         return textEntity
     }
