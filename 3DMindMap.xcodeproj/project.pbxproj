@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		94CD8A7D2D8DB604009FA3AA /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = 94CD8A7C2D8DB604009FA3AA /* RealityKitContent */; };
+		9EF913112D8FAB8000610E46 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 9EF913102D8FAB8000610E46 /* GoogleGenerativeAI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				94CD8A7D2D8DB604009FA3AA /* RealityKitContent in Frameworks */,
+				9EF913112D8FAB8000610E46 /* GoogleGenerativeAI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,6 +96,7 @@
 			name = 3DMindMap;
 			packageProductDependencies = (
 				94CD8A7C2D8DB604009FA3AA /* RealityKitContent */,
+				9EF913102D8FAB8000610E46 /* GoogleGenerativeAI */,
 			);
 			productName = 3DMindMap;
 			productReference = 94CD8A772D8DB604009FA3AA /* 3DMindMap.app */;
@@ -123,6 +126,9 @@
 			);
 			mainGroup = 94CD8A6E2D8DB604009FA3AA;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9EF9130F2D8FAB8000610E46 /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 94CD8A782D8DB604009FA3AA /* Products */;
 			projectDirPath = "";
@@ -352,10 +358,26 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		9EF9130F2D8FAB8000610E46 /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/generative-ai-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.6;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		94CD8A7C2D8DB604009FA3AA /* RealityKitContent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RealityKitContent;
+		};
+		9EF913102D8FAB8000610E46 /* GoogleGenerativeAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9EF9130F2D8FAB8000610E46 /* XCRemoteSwiftPackageReference "generative-ai-swift" */;
+			productName = GoogleGenerativeAI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
