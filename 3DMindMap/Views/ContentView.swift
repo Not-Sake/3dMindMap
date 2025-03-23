@@ -64,7 +64,9 @@ struct ContentView: View {
                                 fallthrough
                             @unknown default:
                                 // On unknown response, assume space did not open.
-                                appModel.immersiveSpaceState = .closed
+                                withAnimation(.easeInOut(duration: 2.0)) {
+                                    appModel.immersiveSpaceState = .closed
+                                }
                             }
                             
                         case .inTransition:
