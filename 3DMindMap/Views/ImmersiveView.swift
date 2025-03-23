@@ -18,7 +18,7 @@ struct ImmersiveView: View {
         RealityView { content in
             // 背景追加
             var material = UnlitMaterial()
-            guard let resource = try? TextureResource.load(named: "space") else {
+            guard let resource = try? TextureResource.load(named: "cyber") else {
                 fatalError("Couldn't load texture resource.")
             }
             material.color = .init(texture: .init(resource))
