@@ -94,8 +94,8 @@ final class ImmersiveViewModel {
     
     func addInitialNode(text: String) {
         let x: Float = 0
-        let y: Float = 1
-        let z: Float = -1
+        let y: Float = 1.2
+        let z: Float = -3.25
         let id = UUID().uuidString
         
         let newCube = createNodeEntity(

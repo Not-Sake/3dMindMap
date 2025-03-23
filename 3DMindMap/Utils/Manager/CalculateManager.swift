@@ -16,7 +16,7 @@ class CalculatorManager {
     //ある一定の距離で最適な位置が見つからなかった場合に広げる距離(m)
     let expandDistance: Double = 0.06
     //ユーザーからの最短距離(m)
-    let userDistance: Double = 2.0
+    let userDistance: Double = 1.0
     
     public func newPosition(parentId: String, nodes: [NodeType]) -> Point3D {
         guard let parent = nodes.first(where: { $0.id == parentId }) else {
@@ -42,7 +42,10 @@ class CalculatorManager {
         for _ in 0..<maxTryCount {
             let randomInclination = Angle2D(radians: Double.random(in: 0..<Double.pi * 2))
             let randomAzimuth = Angle2D(radians: Double.random(in: 0..<Double.pi * 2))
-            let randomPosition: Point3D = .init(SphericalCoordinates3D(radius: distance, inclination: randomInclination, azimuth: randomAzimuth))
+            var randomPosition: Point3D = .init(SphericalCoordinates3D(radius: distance, inclination: randomInclination, azimuth: randomAzimuth))
+            randomPosition.x += parentPosition.x
+            randomPosition.y += parentPosition.y
+            randomPosition.z += parentPosition.z
             var success = true
             for node in nodes {
                 if checkDistance(from: randomPosition, to: node.position) < minDistance || tooNear(position: randomPosition) {
@@ -63,12 +66,21 @@ class CalculatorManager {
     
     //ユーザーの指定された四方、またユーザーの後ろに配置されないようにする
     private func tooNear(position: Point3D) -> Bool  {
-        if position.z > -(userDistance) {
-            return true
-        }
         if position.x > -(userDistance) && position.x < userDistance {
+            print("bbb")
+            if position.z > -(userDistance) {
+                print("aaa")
+                print(position.z)
+                return true
+            }
+        }
+        if position.z > 0 {
+            print("ddd")
             return true
         }
+        
+        
+        print("ccc")
         return false
     }
     
