@@ -3,7 +3,7 @@ import Foundation
 
 let env = try? LoadEnv()
 
-let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: "AIzaSyAnI6Ey8mJ3baFB1J28_HvZsboiX6i82-w")
+let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: "")
 
 struct GetIdeasRepository {
     let content: String
