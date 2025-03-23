@@ -28,7 +28,7 @@ playground.xcworkspace
 
 .build/
 
-
+.env
 
 Carthage/Build/
 
