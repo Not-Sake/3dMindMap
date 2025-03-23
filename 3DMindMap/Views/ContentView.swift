@@ -31,7 +31,11 @@ struct ContentView: View {
                 }
                 Button(action: {
                     isFocused = false
-                    model.addCube(text: model.inputText)
+                    if model.nodes.count == 0 {
+                        model.addInitialNode(text: model.inputText)
+                    } else {
+                        model.addNode(text: model.inputText)
+                    }
                     
                     Task { @MainActor in
                         switch appModel.immersiveSpaceState {
@@ -64,7 +68,9 @@ struct ContentView: View {
                                 fallthrough
                             @unknown default:
                                 // On unknown response, assume space did not open.
-                                appModel.immersiveSpaceState = .closed
+                                withAnimation(.easeInOut(duration: 2.0)) {
+                                    appModel.immersiveSpaceState = .closed
+                                }
                             }
                             
                         case .inTransition:
