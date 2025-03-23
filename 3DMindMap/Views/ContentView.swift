@@ -41,11 +41,10 @@ struct ContentView: View {
                         switch appModel.immersiveSpaceState {
                         case .open:
                             //                                appModel.immersiveSpaceState = .inTransition
-                            //                                await dismissImmersiveSpace()
-                            // Don't set immersiveSpaceState to .closed because there
-                            // are multiple paths to ImmersiveView.onDisappear().
-                            // Only set .closed in ImmersiveView.onDisappear().
-                            withAnimation(.easeInOut(duration: 1.0)) { // 1秒かけてスムーズに
+                        
+                            withAnimation(.easeInOut(duration: 1.0)) {
+                                model.isTextField = false
+                                // 1秒かけてスムーズに
                                 dismiss()
                             }
                             break
@@ -87,6 +86,7 @@ struct ContentView: View {
             }
             .padding(.leading, 20)
             .cornerRadius(.infinity)
+            Text("困ったらハートを作ってね！")
         }
     }
 }

@@ -16,7 +16,9 @@ final class ImmersiveViewModel {
     var cubes: [Entity] = []
     var inputText: String = ""
     var selectedNodeId: String = ""
+    var isTextField = false
     private var contentEntity = Entity()
+    var saggestionText: [String] = []
     
     func setupContentEntity() -> Entity {
         return contentEntity
@@ -111,6 +113,11 @@ final class ImmersiveViewModel {
     func updateNodePosition(entity: Entity, newPosition: SIMD3<Float>) {
         if let index = nodes.firstIndex(where: { "\($0.id)" == entity.name }) {
             nodes[index].position = Point3D(x: newPosition.x, y: newPosition.y, z: newPosition.z)
+        }
+    }
+    func inputTexts(texts: [String]){
+        for text in texts {
+            addNode(text: text)
         }
     }
     

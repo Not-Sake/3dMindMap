@@ -14,6 +14,7 @@ struct ImmersiveView: View {
     @State var nextWindowID = NewWindowID(id: 1)
     @Environment(\.openWindow) private var openWindow
     @ObservedObject var gestureModel: HeartGestureModel
+   
     
     var body: some View {
         RealityView { content in
@@ -67,22 +68,27 @@ struct ImmersiveView: View {
             TapGesture()
                 .targetedToAnyEntity()
                 .onEnded { value in
+                    model.isTextField = true
                     let entity = value.entity
                     let entityId = entity.name
                     model.selectedNodeId = entityId
                     print("selected", model.selectedNodeId)
                     openWindow(value: nextWindowID.id)
+            
                 }
         )
     }
     
     
     func monitorHeartGesture() async {
+        if model.isTextField == true{
         while true {
-            if let _ = gestureModel.computeTransformOfUserPerformedHeartGesture() {
-                print("Heartできた！!")
+                if let _ = gestureModel.computeTransformOfUserPerformedHeartGesture() {
+                    print("Heartできた！!")
+                    model.inputTexts(texts: ["りんご","バナナ","きゅうり"])
+                }
+                try? await Task.sleep(nanoseconds: 500_000_000) // 0.5秒ごとにチェック
             }
-            try? await Task.sleep(nanoseconds: 500_000_000) // 0.5秒ごとにチェック
         }
     }
 }
