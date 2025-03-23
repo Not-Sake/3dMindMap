@@ -13,6 +13,7 @@ struct ImmersiveView: View {
     @State var model = ImmersiveViewModel.shared
     @State var nextWindowID = NewWindowID(id: 1)
     @Environment(\.openWindow) private var openWindow
+    @ObservedObject var gestureModel: HeartGestureModel
     
     var body: some View {
         RealityView { content in
@@ -32,13 +33,21 @@ struct ImmersiveView: View {
             let scene = model.setupContentEntity()
             content.add(scene)
             
-            
             for cube in cubes {
                 scene.addChild(cube)
-                
-
             }
-            
+        }
+        .task {
+            await gestureModel.start()
+        }
+        .task {
+            await gestureModel.publishHandTrackingUpdates()
+        }
+        .task {
+            await gestureModel.monitorSessionEvents()
+        }
+        .task {
+            await monitorHeartGesture()
         }
         .gesture(
             DragGesture()
@@ -63,13 +72,22 @@ struct ImmersiveView: View {
                     model.selectedNodeId = entityId
                     print("selected", model.selectedNodeId)
                     openWindow(value: nextWindowID.id)
-                    
                 }
         )
+    }
+    
+    
+    func monitorHeartGesture() async {
+        while true {
+            if let _ = gestureModel.computeTransformOfUserPerformedHeartGesture() {
+                print("Heartできた！!")
+            }
+            try? await Task.sleep(nanoseconds: 500_000_000) // 0.5秒ごとにチェック
+        }
     }
 }
 
 #Preview(immersionStyle: .full) {
-    ImmersiveView()
+    ImmersiveView(gestureModel: HeartGestureModel())
         .environment(AppModel())
 }

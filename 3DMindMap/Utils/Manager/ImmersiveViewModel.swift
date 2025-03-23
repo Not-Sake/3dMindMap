@@ -80,4 +80,5 @@ final class ImmersiveViewModel {
             nodes[index].position = Point3D(x: newPosition.x, y: newPosition.y, z: newPosition.z)
         }
     }
+    
 }

@@ -20,7 +20,7 @@ struct MindMapApp: App {
         .defaultSize(CGSize(width: 400, height: 5))
         
         ImmersiveSpace(id: appModel.immersiveSpaceID) {
-            ImmersiveView()
+            ImmersiveView( gestureModel: HeartGestureModel())
                 .environment(appModel)
                 .onAppear {
                     appModel.immersiveSpaceState = .open
