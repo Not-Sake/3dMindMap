@@ -40,6 +40,7 @@ class CreateMesh {
 //        nodeEntity.components.set(PhysicsBodyComponent(shapes: nodeEntity.collision!.shapes, mass: 0.0, material: physicsMaterial, mode: .dynamic))
         // 3. ユーザーインタラクションのターゲット設定 (InputTargetComponent)
         nodeEntity.components.set(InputTargetComponent(allowedInputTypes: .indirect))
+        nodeEntity.components.set(OpacityComponent(opacity: 0))
        
         return nodeEntity
     }
@@ -64,6 +65,7 @@ class CreateMesh {
         
         // 文字の向きを修正
         textEntity.orientation = simd_quatf(angle: 0, axis: [0, 1, 0])
+        
         
         //  textEntity.transform.translation = SIMD3(position)
         

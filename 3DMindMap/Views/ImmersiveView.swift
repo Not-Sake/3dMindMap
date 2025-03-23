@@ -13,6 +13,8 @@ struct ImmersiveView: View {
     @State var model = ImmersiveViewModel.shared
     @State var nextWindowID = NewWindowID(id: 1)
     @Environment(\.openWindow) private var openWindow
+    @ObservedObject var gestureModel: HeartGestureModel
+    @State var load = false
     
     var body: some View {
         RealityView { content in
@@ -32,11 +34,44 @@ struct ImmersiveView: View {
             let scene = model.setupContentEntity()
             content.add(scene)
             
-            
-            for cube in cubes {
-                scene.addChild(cube)
+            for cube in model.cubes {
+                model.animateOpacity(nodeEntity: cube)
             }
-            
+            if load == true{
+                // memo もっと後ろに配置する
+                do {
+                    // heartanimationを非同期で読み込む
+                    let heartModel = try await Entity(named: "heartanimation", in: RealityKitContent.realityKitContentBundle)
+                    heartModel.scale = SIMD3(repeating: 0.1)
+                    
+                    // Y軸を反転
+                    heartModel.scale *= SIMD3(x: 1, y: -1, z: 1)
+                    
+                    if let animation = heartModel.availableAnimations.first {
+                        heartModel.playAnimation(animation.repeat())
+                    }
+                    
+                    // シーンにheartModelを追加
+                    scene.addChild(heartModel)
+                    
+                } catch {
+                    // エラーハンドリング
+                    print("Error loading entity or playing animation: \(error)")
+                }
+                
+            }
+        }
+        .task {
+            await gestureModel.start()
+        }
+        .task {
+            await gestureModel.publishHandTrackingUpdates()
+        }
+        .task {
+            await gestureModel.monitorSessionEvents()
+        }
+        .task {
+            await monitorHeartGesture()
         }
         .gesture(
             DragGesture()
@@ -56,6 +91,7 @@ struct ImmersiveView: View {
             TapGesture()
                 .targetedToAnyEntity()
                 .onEnded { value in
+                    model.isTextField = true
                     let entity = value.entity
                     let entityId = entity.name
                     model.selectedNodeId = entityId
@@ -73,9 +109,40 @@ struct ImmersiveView: View {
                 }
         )
     }
+    
+    
+    func monitorHeartGesture() async {
+       
+            while true {
+                if let _ = gestureModel.computeTransformOfUserPerformedHeartGesture() {
+                    print("Heartできた！!")
+                    
+                    do{
+                        let node = model.findNode(id: model.selectedNodeId)
+                        if node != nil {
+                            
+                            let topic = node?.topic
+                            print(node?.topic,"aaaaa")
+                            let  texts =  await model.getIdeas(text: topic ?? "")
+                            model.inputTexts(texts: texts)
+                            sleep(5)
+                        }
+                        else{
+                            print(node?.topic)
+                        }
+                    }
+                }
+                    
+                try? await Task.sleep(nanoseconds: 500_000_000) // 0.5秒ごとにチェック
+            }
+        
+    }
+    private func hideKeyboard() {
+           UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+       }
 }
 
 #Preview(immersionStyle: .full) {
-    ImmersiveView()
+    ImmersiveView(gestureModel: HeartGestureModel())
         .environment(AppModel())
 }

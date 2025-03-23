@@ -16,12 +16,28 @@ final class ImmersiveViewModel {
     var cubes: [Entity] = []
     var inputText: String = ""
     var selectedNodeId: String = ""
+    var isTextField = false
     private var contentEntity = Entity()
+    var saggestionText: [String] = []
     
     func setupContentEntity() -> Entity {
         return contentEntity
     }
-    
+    func animateOpacity(nodeEntity: Entity) {
+        var value: Float = 0.0
+        let duration: TimeInterval = 0.5
+        let steps: Int = 60  // 60フレーム（1秒間）
+        let interval = duration / Double(steps)
+
+        Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
+            value += 1.0 / Float(steps)
+            nodeEntity.components.set(OpacityComponent(opacity: value))
+
+            if value >= 1.0 {
+                timer.invalidate()  // アニメーション完了後にタイマーを停止
+            }
+        }
+    }
     func findNode(id: String) -> NodeType? {
         if let index = nodes.firstIndex(where: { "\($0.id)" == id }) {
             return nodes[index]
@@ -74,6 +90,7 @@ final class ImmersiveViewModel {
         entity.addChild(textEntity) // キューブの子要素としてテキストを追加
 
         contentEntity.addChild(entity)
+        animateOpacity(nodeEntity: entity)
         
         return entity
     }
@@ -133,10 +150,20 @@ final class ImmersiveViewModel {
             nodes[index].position = Point3D(x: newPosition.x, y: newPosition.y, z: newPosition.z)
         }
     }
+
+    func inputTexts(texts: [String]){
+        for text in texts {
+            addNode(text: text)
+        }
+    }
+    
+
     
     func getIdeas(text: String) async -> [String] {
         let repository = GetIdeasRepository(content: text)
         let ideas = await repository.get() ?? []
+        print(ideas)
         return ideas
     }
+
 }
