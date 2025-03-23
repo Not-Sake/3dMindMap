@@ -2,21 +2,31 @@ import SwiftUI
 import RealityKit
 
 class CreateMesh {
-    public func createNode(id: String, position: Point3D) -> ModelEntity {
+    public func createNode(id: String, position: Point3D, bgColor: Color?, borderColor: Color?) -> ModelEntity {
+        // 🎨 パステルカラーの内側のPlane
         let boxMesh = MeshResource.generatePlane(width: 1, height: 0.3, cornerRadius: .infinity)
-        
-        var material = SimpleMaterial(color: .white.withAlphaComponent(0.9), isMetallic: false)
-        
-        material.roughness = 0.05
-        material.metallic = 0
-        
-        let nodeEntity = ModelEntity(mesh: boxMesh, materials: [material])
-        
-        nodeEntity.components.set(ModelComponent(
-            mesh: boxMesh,
-            materials: [material]
-        ))
-        
+        let pastelColor = UIColor(bgColor ?? Color.white).withAlphaComponent(0.9)
+        let material = UnlitMaterial(color: pastelColor)
+        let innerEntity = ModelEntity(mesh: boxMesh, materials: [material])
+        let borderWidth = 0.04
+           
+        // 🎨 外側の枠線 (Planeを少し大きく)
+        let borderMesh = MeshResource.generatePlane(width: 1 + Float(borderWidth), height: Float(0.3 + borderWidth), cornerRadius: .infinity)
+        let borderUIColor = UIColor((borderColor ?? bgColor) ?? Color.white)
+        let borderMaterial = UnlitMaterial(color: borderUIColor)
+        let borderEntity = ModelEntity(mesh: borderMesh, materials: [borderMaterial])
+        borderEntity.name = "border_\(id)"
+       
+        // ✅ ノードグループの親Entity
+        let nodeEntity = ModelEntity()
+        nodeEntity.addChild(borderEntity)
+        nodeEntity.addChild(innerEntity)
+       
+        // 📏 位置・サイズの調整
+        borderEntity.position.z = -0.001  // 枠線を少し奥に配置
+        innerEntity.position.z = 0.0
+       
+        // 🪝 位置と名前の設定
         nodeEntity.transform.translation = SIMD3(position)
         nodeEntity.name = id
         nodeEntity.components.set(BillboardComponent())
@@ -30,7 +40,7 @@ class CreateMesh {
 //        nodeEntity.components.set(PhysicsBodyComponent(shapes: nodeEntity.collision!.shapes, mass: 0.0, material: physicsMaterial, mode: .dynamic))
         // 3. ユーザーインタラクションのターゲット設定 (InputTargetComponent)
         nodeEntity.components.set(InputTargetComponent(allowedInputTypes: .indirect))
-        
+       
         return nodeEntity
     }
     public func createTextEntity(text: String, position: Point3D) -> ModelEntity {
@@ -43,14 +53,14 @@ class CreateMesh {
             lineBreakMode: .byWordWrapping
         )
         
-        let textMaterial = SimpleMaterial(color: .black, isMetallic: false)
+        let textMaterial = UnlitMaterial(color: .black)
         let textEntity = ModelEntity(mesh: textMesh, materials: [textMaterial])
         let bounding = textEntity.visualBounds(relativeTo: nil)
 
-           // **テキストを中央に配置**
-           textEntity.position.x = -bounding.center.x
-           textEntity.position.y = -bounding.center.y
-        textEntity.position.z = 0.02
+        // **テキストを中央に配置**
+        textEntity.position.x = -bounding.center.x
+        textEntity.position.y = -bounding.center.y
+        textEntity.position.z = 0.01
         
         // 文字の向きを修正
         textEntity.orientation = simd_quatf(angle: 0, axis: [0, 1, 0])
