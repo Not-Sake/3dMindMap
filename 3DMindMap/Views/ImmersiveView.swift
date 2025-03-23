@@ -35,6 +35,8 @@ struct ImmersiveView: View {
             
             for cube in cubes {
                 scene.addChild(cube)
+                
+
             }
             
         }
