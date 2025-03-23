@@ -90,6 +90,16 @@ final class ImmersiveViewModel {
         )
         cubes.append(newCube)
         inputText = ""
+        
+        // 効果音を再生
+        //空間オーディオの指向性の焦点
+        let focus = 0.5
+        newCube.spatialAudio = SpatialAudioComponent(gain: 10, directivity: .beam(focus: focus))
+        guard let audio = SoundManager.audio(type: .addNode) else {
+            print("Error to load audio file")
+            return
+        }
+        newCube.playAudio(audio)
     }
     
     func addInitialNode(text: String) {
@@ -111,7 +121,7 @@ final class ImmersiveViewModel {
         //空間オーディオの指向性の焦点
         let focus = 0.5
         newCube.spatialAudio = SpatialAudioComponent(gain: 10, directivity: .beam(focus: focus))
-        guard let audio = SoundManager.audio(type: .addNode) else {
+        guard let audio = SoundManager.audio(type: .enterImmersive) else {
             print("Error to load audio file")
             return
         }
