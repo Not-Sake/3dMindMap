@@ -58,12 +58,4 @@ class CalculatorManager {
     private func checkDistance(from p1: Point3D, to p2: Point3D) -> Double {
         return p1.distance(to: p2)
     }
-    
-    //MARK: - Nodeの向きを計算
-    
-    public func calculateNodeDirection(position: Point3D) -> CGFloat {
-        let radiant: CGFloat = atan2(position.z, position.x)
-        let rotate = radiant - CGFloat.pi / 2
-        return rotate
-    }
 }
