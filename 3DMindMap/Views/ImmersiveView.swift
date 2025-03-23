@@ -14,7 +14,7 @@ struct ImmersiveView: View {
     @State var nextWindowID = NewWindowID(id: 1)
     @Environment(\.openWindow) private var openWindow
     @ObservedObject var gestureModel: HeartGestureModel
-   
+    
     
     var body: some View {
         RealityView { content in
@@ -34,8 +34,8 @@ struct ImmersiveView: View {
             let scene = model.setupContentEntity()
             content.add(scene)
             
-            for cube in cubes {
-                scene.addChild(cube)
+            for cube in model.cubes {
+                model.animateOpacity(nodeEntity: cube)
             }
         }
         .task {
@@ -74,7 +74,7 @@ struct ImmersiveView: View {
                     model.selectedNodeId = entityId
                     print("selected", model.selectedNodeId)
                     openWindow(value: nextWindowID.id)
-            
+                    
                 }
         )
     }
@@ -82,7 +82,7 @@ struct ImmersiveView: View {
     
     func monitorHeartGesture() async {
         if model.isTextField == true{
-        while true {
+            while true {
                 if let _ = gestureModel.computeTransformOfUserPerformedHeartGesture() {
                     print("Heartできた！!")
                     model.inputTexts(texts: ["りんご","バナナ","きゅうり"])
