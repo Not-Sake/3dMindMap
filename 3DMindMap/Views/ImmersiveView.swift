@@ -61,7 +61,15 @@ struct ImmersiveView: View {
                     model.selectedNodeId = entityId
                     print("selected", model.selectedNodeId)
                     openWindow(value: nextWindowID.id)
-                    
+                    //クリック音再生
+                    //空間オーディオの指向性の焦点
+                    let focus = 0.5
+                    entity.spatialAudio = SpatialAudioComponent(gain: 10, directivity: .beam(focus: focus))
+                    guard let audio = SoundManager.audio(type: .selectNode) else {
+                        print("Error to load audio file")
+                        return
+                    }
+                    entity.playAudio(audio)
                 }
         )
     }
