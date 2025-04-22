@@ -4,6 +4,7 @@
 //
 //  Created by TAIGA ITO on 2025/03/21.
 //
+import SwiftData
 import SwiftUI
 import RealityKit
 import RealityKitContent
@@ -15,6 +16,8 @@ struct ImmersiveView: View {
     @Environment(\.openWindow) private var openWindow
     @ObservedObject var gestureModel: HeartGestureModel
     @State var load = false
+    @Query private var nodes: [NodeType]
+    @Environment(\.modelContext) private var modelContext
     
     var body: some View {
         RealityView { content in
@@ -58,7 +61,6 @@ struct ImmersiveView: View {
                     // エラーハンドリング
                     print("Error loading entity or playing animation: \(error)")
                 }
-                
             }
         }
         .task {
@@ -85,6 +87,10 @@ struct ImmersiveView: View {
                     
                     // ノード情報も更新
                     model.updateNodePosition(entity: entity, newPosition: newPos)
+                    if let index = nodes.firstIndex(where: { "\($0.id)" == entity.name }) {
+                        nodes[index].position = Point3D(x: newPos.x, y: newPos.y, z: newPos.z)
+                        try? modelContext.save()
+                    }
                 }
         )
         .gesture(
@@ -110,32 +116,33 @@ struct ImmersiveView: View {
         )
     }
     
+    init(gestureModel: HeartGestureModel) {
+        self.gestureModel = gestureModel
+        for node in nodes {
+            let cube = model.createNodeEntity(id: node.id, posision: node.position, text: node.topic, bgColor: node.bgColor)
+            model.cubes.append(cube)
+        }
+    }
     
     func monitorHeartGesture() async {
-       
-            while true {
-                if let _ = gestureModel.computeTransformOfUserPerformedHeartGesture() {
-                    print("Heartできた！!")
-                    
-                    do{
-                        let node = model.findNode(id: model.selectedNodeId)
-                        if node != nil {
-                            
-                            let topic = node?.topic
-                            print(node?.topic,"aaaaa")
-                            let  texts =  await model.getIdeas(text: topic ?? "")
-                            model.inputTexts(texts: texts)
-                            sleep(5)
-                        }
-                        else{
-                            print(node?.topic)
-                        }
+        while true {
+            if let _ = gestureModel.computeTransformOfUserPerformedHeartGesture() {
+                print("Heartできた！!")
+                do{
+                    let node = model.findNode(id: model.selectedNodeId)
+                    if node != nil {
+                        let topic = node?.topic
+                        let  texts =  await model.getIdeas(text: topic ?? "")
+//                        model.inputTexts(texts: texts)
+                        sleep(5)
+                    }
+                    else{
+                        print(node?.topic)
                     }
                 }
-                    
-                try? await Task.sleep(nanoseconds: 500_000_000) // 0.5秒ごとにチェック
             }
-        
+            try? await Task.sleep(nanoseconds: 500_000_000) // 0.5秒ごとにチェック
+        }
     }
     private func hideKeyboard() {
            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)

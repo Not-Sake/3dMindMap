@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct MindMapApp: App {
@@ -32,5 +33,6 @@ struct MindMapApp: App {
                 }
         }
         .immersionStyle(selection: .constant(.full), in: .full)
+        .modelContainer(for: NodeType.self)
     }
 }

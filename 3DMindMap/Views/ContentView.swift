@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 import RealityKit
 
 struct ContentView: View {
@@ -14,12 +15,40 @@ struct ContentView: View {
     @Environment(AppModel.self) private var appModel
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
     @Environment(\.openImmersiveSpace) private var openImmersiveSpace
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @FocusState private var isFocused: Bool
     
     
     var body: some View {
         VStack {
+            Button(action: {
+                Task {
+                    appModel.immersiveSpaceState = .inTransition
+                    switch await openImmersiveSpace(id: appModel.immersiveSpaceID) {
+                    case .opened:
+                        // Don't set immersiveSpaceState to .open because there
+                        // may be multiple paths to ImmersiveView.onAppear().
+                        // Only set .open in ImmersiveView.onAppear().
+                        withAnimation(.easeInOut(duration: 2.0)) { // 1秒かけてスムーズに
+                            dismiss()
+                        }
+                        break
+                    case .userCancelled, .error:
+                        // On error, we need to mark the immersive space
+                        // as closed because it failed to open.
+                        dismiss()
+                        fallthrough
+                    @unknown default:
+                        // On unknown response, assume space did not open.
+                        withAnimation(.easeInOut(duration: 2.0)) {
+                            appModel.immersiveSpaceState = .closed
+                        }
+                    }
+                }
+            }, label: {
+                Text("マインドマップを開く")
+            })
             HStack {
                 TextField(
                     "文字を入力",
@@ -34,7 +63,10 @@ struct ContentView: View {
                     if model.nodes.count == 0 {
                         model.addInitialNode(text: model.inputText)
                     } else {
-                        model.addNode(text: model.inputText)
+                        let nodeData = model.addNodeData(inputText: model.inputText, parentId: model.selectedNodeId)
+                        guard let nodeData else { return }
+                        model.addNode(node: nodeData)
+                        modelContext.insert(nodeData)
                     }
                     
                     Task { @MainActor in

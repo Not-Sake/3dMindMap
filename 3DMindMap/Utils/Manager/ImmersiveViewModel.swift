@@ -52,24 +52,26 @@ final class ImmersiveViewModel {
         return nil
     }
     
-    func addNodeData(inputText: String, parentId: String, position: Point3D, id: String) -> NodeType? {
+    func addNodeData(inputText: String, parentId: String) -> NodeType? {
+        let id = UUID().uuidString
+        let position = CalculatorManager().newPosition(parentId: selectedNodeId, nodes: nodes)
         let parentNode = findNode(id: parentId)
         if parentNode == nil {
             return nil
         }
-        let childColor = findChild(parentId: parentId)?.bgColor
-        let color = parentNode?.childrenCount == 0 ? RandomColor().getRandomColor(parentNode?.bgColor) : childColor
-        let newNode = NodeType(id: id, topic: inputText, parentId: parentId, position: position, bgColor: color, frameColor: nil)
+        let childColor = findChild(parentId: parentId)?.bgColor.toColor()
+        let color = childColor ?? RandomColor().getRandomColor(parentNode?.bgColor.toColor())
+        let newNode = NodeType(id: id, topic: inputText, parentId: parentId, position: position, bgColor: ColorData(color: color), frameColor: nil)
         nodes.append(newNode)
         
         if parentNode?.childrenCount == 0 {
             if let index = cubes.firstIndex(where: { "\($0.name)" == "\(parentId)" }) {
                 let entity = cubes[index]
                 if let parentBorder = entity.children.first(where: { "\($0.name)" == "border_\(parentId)" }) {
-                    let borderUIColor = UIColor(color ?? Color.black)
+                    let borderUIColor = UIColor(color)
                     let borderMaterial = UnlitMaterial(color: borderUIColor)
                     parentBorder.components[ModelComponent.self]?.materials = [borderMaterial]
-                    parentNode?.frameColor = color
+                    parentNode?.frameColor = ColorData(color: color)
                 }
             }
         }
@@ -77,8 +79,9 @@ final class ImmersiveViewModel {
         return newNode
     }
     
-    func createNodeEntity(id: String, posision: Point3D, text: String, bgColor: Color?) -> Entity {
-        let entity = CreateMesh().createNode(id: id, position: posision, bgColor: bgColor ?? Color.white, borderColor: nil)
+    func createNodeEntity(id: String, posision: Point3D, text: String, bgColor: ColorData?) -> Entity {
+        let color = bgColor?.toColor()
+        let entity = CreateMesh().createNode(id: id, position: posision, bgColor: color ?? Color.white, borderColor: nil)
 
         entity.name = id
         entity.components.set(InputTargetComponent(allowedInputTypes: .indirect))
@@ -95,15 +98,12 @@ final class ImmersiveViewModel {
         return entity
     }
     
-    func addNode(text:String) {
-        let id = UUID().uuidString
-        let position = CalculatorManager().newPosition(parentId: selectedNodeId, nodes: nodes)
-        let newEntity = addNodeData(inputText: inputText, parentId: selectedNodeId, position: position, id: id)
+    func addNode(node: NodeType) {
         let newCube = createNodeEntity(
-            id: id,
-            posision: position,
-            text: text,
-            bgColor: newEntity?.bgColor
+            id: node.id,
+            posision: node.position,
+            text: node.topic,
+            bgColor: node.bgColor
         )
         cubes.append(newCube)
         inputText = ""
@@ -128,10 +128,10 @@ final class ImmersiveViewModel {
         let newCube = createNodeEntity(
             id: id,
             posision: Point3D(x: x, y: y, z: z), text: text,
-            bgColor: Color.white
+            bgColor: ColorData(color: .white)
         )
         cubes.append(newCube)
-        nodes.append(NodeType(id: id, topic: inputText, parentId: "", position: Point3D(x: x, y: y, z: z), bgColor: Color.white, frameColor: nil))
+        nodes.append(NodeType(id: id, topic: inputText, parentId: "", position: Point3D(x: x, y: y, z: z), bgColor: ColorData(color: .white), frameColor: nil))
         inputText = ""
         
         // 効果音を再生
@@ -151,13 +151,11 @@ final class ImmersiveViewModel {
         }
     }
 
-    func inputTexts(texts: [String]){
-        for text in texts {
-            addNode(text: text)
-        }
-    }
-    
-
+//    func inputTexts(texts: [String]){
+//        for text in texts {
+//            addNode(node: node)
+//        }
+//    }
     
     func getIdeas(text: String) async -> [String] {
         let repository = GetIdeasRepository(content: text)
