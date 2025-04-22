@@ -8,44 +8,51 @@
 import SwiftData
 import SwiftUI
 
+@MainActor
+class ModelContainerProvider {
+    static let shared: ModelContainer = {
+        do {
+            let schema = Schema([NodeType.self])
+            let config = ModelConfiguration("default", schema: schema)
+            return try ModelContainer(for: schema, configurations: [config])
+        } catch {
+            fatalError("Failed to create ModelContainer: \(error)")
+        }
+    }()
+}
+
 @Model
 class NodeType {
     var id: String
     var topic: String
     var parentId: String
-    var position: Point3D
-    var bgColor: ColorData
-    var frameColor: ColorData?
+    var x: Double
+    var y: Double
+    var z: Double
+    var bgColor: String
+    var frameColor: String?
     var childrenCount: Int = 0
     
-    init(id: String,topic: String, parentId: String, position: Point3D, bgColor: ColorData?, frameColor: ColorData?) {
+    init(id: String,topic: String, parentId: String, position: Point3D, bgColor: String?, frameColor: String?) {
         self.id = id
         self.topic = topic
         self.parentId = parentId
-        self.bgColor = bgColor ?? ColorData(color: .white)
-        self.frameColor = bgColor ?? ColorData(color: .white)
+        self.bgColor = bgColor ?? CustomColor.defaultColor
+        self.frameColor = bgColor ?? CustomColor.defaultColor
         self.childrenCount = 0
-        self.position = position
-    }
-}
-
-struct ColorData: Codable {
-    var red: Double
-    var green: Double
-    var blue: Double
-    var opacity: Double
-    
-    init(color: Color) {
-        let uiColor = UIColor(color)
-        var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
-        uiColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-        self.red = Double(red)
-        self.green = Double(green)
-        self.blue = Double(blue)
-        self.opacity = Double(alpha)
+        self.x = position.x
+        self.y = position.y
+        self.z = position.z
     }
     
-    func toColor() -> Color {
-        Color(red: red, green: green, blue: blue, opacity: opacity)
+    var position: Point3D {
+        get {
+            return Point3D(x: x, y: y, z: z)
+        }
+        set {
+            x = newValue.x
+            y = newValue.y
+            z = newValue.z
+        }
     }
 }

@@ -1,27 +1,27 @@
 import SwiftUI
 
-struct CustomColors {
-    static let randomColors: [Color] = [
-        Color("RandomColor 1"),
-        Color("RandomColor 2"),
-        Color("RandomColor 3"),
-        Color("RandomColor 4"),
-        Color("RandomColor 5"),
-        Color("RandomColor 6"),
-        Color("RandomColor 7"),
-        Color("RandomColor 8"),
-        Color("RandomColor 9"),
-        Color("RandomColor 10"),
-        Color("RandomColor 11"),
-        Color("RandomColor 12"),
-        Color("RandomColor 13"),
-        Color("RandomColor 14"),
-        Color("RandomColor 15"),
-        Color("RandomColor 16"),
-        Color("RandomColor 17"),
-        Color("RandomColor 18"),
-        Color("RandomColor 19"),
-        Color("RandomColor 20"),
+struct CustomColor {
+    static let randomColors: [String] = [
+        "RandomColor 1",
+        "RandomColor 2",
+        "RandomColor 3",
+        "RandomColor 4",
+        "RandomColor 5",
+        "RandomColor 6",
+        "RandomColor 7",
+        "RandomColor 8",
+        "RandomColor 9",
+        "RandomColor 10",
+        "RandomColor 11",
+        "RandomColor 12",
+        "RandomColor 13",
+        "RandomColor 14",
+        "RandomColor 15",
+        "RandomColor 16",
+        "RandomColor 17",
+        "RandomColor 18",
+        "RandomColor 19",
+        "RandomColor 20",
     ]
+    static let defaultColor = "White"
 }
-

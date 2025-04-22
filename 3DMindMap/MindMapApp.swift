@@ -17,6 +17,7 @@ struct MindMapApp: App {
         WindowGroup("New Window", for: NewWindowID.ID.self) { $id in
             ContentView(id: id ?? 1)
                 .environment(appModel)
+                .modelContainer(for: NodeType.self)
         }
         .defaultSize(CGSize(width: 400, height: 5))
         
@@ -31,8 +32,8 @@ struct MindMapApp: App {
                     appModel.immersiveSpaceState = .closed
                     avPlayerViewModel.reset()
                 }
+                .modelContainer(for: NodeType.self)
         }
         .immersionStyle(selection: .constant(.full), in: .full)
-        .modelContainer(for: NodeType.self)
     }
 }

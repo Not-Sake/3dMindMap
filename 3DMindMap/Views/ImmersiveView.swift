@@ -16,8 +16,6 @@ struct ImmersiveView: View {
     @Environment(\.openWindow) private var openWindow
     @ObservedObject var gestureModel: HeartGestureModel
     @State var load = false
-    @Query private var nodes: [NodeType]
-    @Environment(\.modelContext) private var modelContext
     
     var body: some View {
         RealityView { content in
@@ -79,17 +77,27 @@ struct ImmersiveView: View {
             DragGesture()
                 .targetedToAnyEntity()
                 .onChanged { value in
-                    let entity = value.entity
-                    let newPos = value.convert(value.location3D, from: .local, to: entity.parent!)
-                    
-                    // 位置を変更
-                    entity.position = newPos
-                    
-                    // ノード情報も更新
-                    model.updateNodePosition(entity: entity, newPosition: newPos)
-                    if let index = nodes.firstIndex(where: { "\($0.id)" == entity.name }) {
-                        nodes[index].position = Point3D(x: newPos.x, y: newPos.y, z: newPos.z)
-                        try? modelContext.save()
+                    do {
+                        let context = ModelContext(ModelContainerProvider.shared)
+                        let descriptor = FetchDescriptor<NodeType>()
+                        let nodes = try context.fetch(descriptor)
+                        let entity = value.entity
+                        let newPos = value.convert(value.location3D, from: .local, to: entity.parent!)
+                        // 位置を変更
+                        entity.position = newPos
+                        // ノード情報も更新
+                        model.updateNodePosition(entity: entity, newPosition: newPos)
+                        if let index = nodes.firstIndex(where: { "\($0.id)" == entity.name }) {
+                            nodes[index].position = Point3D(x: newPos.x, y: newPos.y, z: newPos.z)
+                            let context = ModelContext(ModelContainerProvider.shared)
+                            let descriptor = FetchDescriptor<NodeType>()
+                            if let node = try context.fetch(descriptor).first(where: { $0.id == nodes[index].id }) {
+                                node.position = Point3D(x: newPos.x, y: newPos.y, z: newPos.z)
+                                try? context.save()
+                            }
+                        }
+                    } catch {
+                        print("Error fetching nodes: \(error)")
                     }
                 }
         )
@@ -114,14 +122,23 @@ struct ImmersiveView: View {
                     entity.playAudio(audio)
                 }
         )
+        .onAppear() {
+            do {
+                let context = ModelContext(ModelContainerProvider.shared)
+                let descriptor = FetchDescriptor<NodeType>()
+                let nodes = try context.fetch(descriptor)
+                for node in nodes {
+                    let cube = model.createNodeEntity(id: node.id, posision: node.position, text: node.topic, bgColor: node.bgColor, frameColor: node.frameColor)
+                    model.cubes.append(cube)
+                }
+            } catch {
+                print("Error fetching nodes: \(error)")
+            }
+        }
     }
     
     init(gestureModel: HeartGestureModel) {
         self.gestureModel = gestureModel
-        for node in nodes {
-            let cube = model.createNodeEntity(id: node.id, posision: node.position, text: node.topic, bgColor: node.bgColor)
-            model.cubes.append(cube)
-        }
     }
     
     func monitorHeartGesture() async {
@@ -133,7 +150,7 @@ struct ImmersiveView: View {
                     if node != nil {
                         let topic = node?.topic
                         let  texts =  await model.getIdeas(text: topic ?? "")
-//                        model.inputTexts(texts: texts)
+                        model.inputTexts(texts: texts)
                         sleep(5)
                     }
                     else{

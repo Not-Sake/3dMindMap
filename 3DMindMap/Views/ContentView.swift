@@ -15,7 +15,6 @@ struct ContentView: View {
     @Environment(AppModel.self) private var appModel
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
     @Environment(\.openImmersiveSpace) private var openImmersiveSpace
-    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @FocusState private var isFocused: Bool
     
@@ -61,19 +60,21 @@ struct ContentView: View {
                 Button(action: {
                     isFocused = false
                     if model.nodes.count == 0 {
-                        model.addInitialNode(text: model.inputText)
+                        let nodeData = model.createInitialNodeData(topic: model.inputText)
+                        let context = ModelContext(ModelContainerProvider.shared)
+                        context.insert(nodeData)
                     } else {
                         let nodeData = model.addNodeData(inputText: model.inputText, parentId: model.selectedNodeId)
                         guard let nodeData else { return }
                         model.addNode(node: nodeData)
-                        modelContext.insert(nodeData)
+                        let context = ModelContext(ModelContainerProvider.shared)
+                        context.insert(nodeData)
                     }
+                    model.inputText = ""
                     
                     Task { @MainActor in
                         switch appModel.immersiveSpaceState {
-                        case .open:
-                            //                                appModel.immersiveSpaceState = .inTransition
-                        
+                        case .open:                        
                             withAnimation(.easeInOut(duration: 1.0)) {
                                 model.isTextField = false
                                 // 1秒かけてスムーズに
@@ -118,6 +119,16 @@ struct ContentView: View {
             }
             .padding(.leading, 20)
             .cornerRadius(.infinity)
+            .onAppear() {
+                do {
+                    let context = ModelContext(ModelContainerProvider.shared)
+                    let descriptor = FetchDescriptor<NodeType>()
+                    let nodes = try context.fetch(descriptor)
+                } catch {
+                    print("Error fetching nodes: \(error)")
+                }
+                
+            }
             Text("困ったらハートを作ってね！")
         }
     }
