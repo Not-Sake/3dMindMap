@@ -1,21 +1,22 @@
 //
-//  ContentView.swift
+//  AddTopicView.swift
 //  3DMindMap
 //
-//  Created by TAIGA ITO on 2025/03/21.
+//  Created by TAIGA ITO on 2025/04/22.
 //
 
 import SwiftUI
 import RealityKit
+import SwiftData
 
-struct ContentView: View {
+struct AddTopicView: View {
+    let id: Int
     @State var model = ImmersiveViewModel.shared
     @Environment(AppModel.self) private var appModel
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
     @Environment(\.openImmersiveSpace) private var openImmersiveSpace
     @Environment(\.dismiss) private var dismiss
     @FocusState private var isFocused: Bool
-    
     
     var body: some View {
         VStack {
@@ -85,11 +86,7 @@ struct ContentView: View {
             }
             .padding(.leading, 20)
             .cornerRadius(.infinity)
+            Text("困ったらハートを作ってね！")
         }
     }
-}
-
-#Preview(windowStyle: .automatic) {
-    ContentView()
-        .environment(AppModel())
 }
