@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 import RealityKit
 
 struct ContentView: View {
@@ -19,6 +20,33 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
+            Button(action: {
+                Task {
+                    appModel.immersiveSpaceState = .inTransition
+                    switch await openImmersiveSpace(id: appModel.immersiveSpaceID) {
+                    case .opened:
+                        // Don't set immersiveSpaceState to .open because there
+                        // may be multiple paths to ImmersiveView.onAppear().
+                        // Only set .open in ImmersiveView.onAppear().
+                        withAnimation(.easeInOut(duration: 2.0)) { // 1秒かけてスムーズに
+                            dismiss()
+                        }
+                        break
+                    case .userCancelled, .error:
+                        // On error, we need to mark the immersive space
+                        // as closed because it failed to open.
+                        dismiss()
+                        fallthrough
+                    @unknown default:
+                        // On unknown response, assume space did not open.
+                        withAnimation(.easeInOut(duration: 2.0)) {
+                            appModel.immersiveSpaceState = .closed
+                        }
+                    }
+                }
+            }, label: {
+                Text("マインドマップを開く")
+            })
             HStack {
                 TextField(
                     "文字を入力",
@@ -31,16 +59,21 @@ struct ContentView: View {
                 Button(action: {
                     isFocused = false
                     if model.nodes.count == 0 {
-                        model.addInitialNode(text: model.inputText)
+                        let nodeData = model.createInitialNodeData(topic: model.inputText)
+                        let context = ModelContext(ModelContainerProvider.shared)
+                        context.insert(nodeData)
                     } else {
-                        model.addNode(text: model.inputText)
+                        let nodeData = model.addNodeData(inputText: model.inputText, parentId: model.selectedNodeId)
+                        guard let nodeData else { return }
+                        model.addNode(node: nodeData)
+                        let context = ModelContext(ModelContainerProvider.shared)
+                        context.insert(nodeData)
                     }
+                    model.inputText = ""
                     
                     Task { @MainActor in
                         switch appModel.immersiveSpaceState {
-                        case .open:
-                            //                                appModel.immersiveSpaceState = .inTransition
-                        
+                        case .open:                        
                             withAnimation(.easeInOut(duration: 1.0)) {
                                 model.isTextField = false
                                 // 1秒かけてスムーズに
@@ -85,6 +118,17 @@ struct ContentView: View {
             }
             .padding(.leading, 20)
             .cornerRadius(.infinity)
+            .onAppear() {
+                do {
+                    let context = ModelContext(ModelContainerProvider.shared)
+                    let descriptor = FetchDescriptor<NodeType>()
+                    let nodes = try context.fetch(descriptor)
+                } catch {
+                    print("Error fetching nodes: \(error)")
+                }
+                
+            }
+            Text("困ったらハートを作ってね！")
         }
     }
 }

@@ -4,6 +4,7 @@
 //
 //  Created by TAIGA ITO on 2025/03/21.
 //
+import SwiftData
 import SwiftUI
 import RealityKit
 import RealityKitContent
@@ -58,7 +59,6 @@ struct ImmersiveView: View {
                     // エラーハンドリング
                     print("Error loading entity or playing animation: \(error)")
                 }
-                
             }
         }
         .task {
@@ -77,14 +77,28 @@ struct ImmersiveView: View {
             DragGesture()
                 .targetedToAnyEntity()
                 .onChanged { value in
-                    let entity = value.entity
-                    let newPos = value.convert(value.location3D, from: .local, to: entity.parent!)
-                    
-                    // 位置を変更
-                    entity.position = newPos
-                    
-                    // ノード情報も更新
-                    model.updateNodePosition(entity: entity, newPosition: newPos)
+                    do {
+                        let context = ModelContext(ModelContainerProvider.shared)
+                        let descriptor = FetchDescriptor<NodeType>()
+                        let nodes = try context.fetch(descriptor)
+                        let entity = value.entity
+                        let newPos = value.convert(value.location3D, from: .local, to: entity.parent!)
+                        // 位置を変更
+                        entity.position = newPos
+                        // ノード情報も更新
+                        model.updateNodePosition(entity: entity, newPosition: newPos)
+                        if let index = nodes.firstIndex(where: { "\($0.id)" == entity.name }) {
+                            nodes[index].position = Point3D(x: newPos.x, y: newPos.y, z: newPos.z)
+                            let context = ModelContext(ModelContainerProvider.shared)
+                            let descriptor = FetchDescriptor<NodeType>()
+                            if let node = try context.fetch(descriptor).first(where: { $0.id == nodes[index].id }) {
+                                node.position = Point3D(x: newPos.x, y: newPos.y, z: newPos.z)
+                                try? context.save()
+                            }
+                        }
+                    } catch {
+                        print("Error fetching nodes: \(error)")
+                    }
                 }
         )
         .gesture(
@@ -108,34 +122,44 @@ struct ImmersiveView: View {
                     entity.playAudio(audio)
                 }
         )
+        .onAppear() {
+            do {
+                let context = ModelContext(ModelContainerProvider.shared)
+                let descriptor = FetchDescriptor<NodeType>()
+                let nodes = try context.fetch(descriptor)
+                for node in nodes {
+                    let cube = model.createNodeEntity(id: node.id, posision: node.position, text: node.topic, bgColor: node.bgColor, frameColor: node.frameColor)
+                    model.cubes.append(cube)
+                }
+            } catch {
+                print("Error fetching nodes: \(error)")
+            }
+        }
     }
     
+    init(gestureModel: HeartGestureModel) {
+        self.gestureModel = gestureModel
+    }
     
     func monitorHeartGesture() async {
-       
-            while true {
-                if let _ = gestureModel.computeTransformOfUserPerformedHeartGesture() {
-                    print("Heartできた！!")
-                    
-                    do{
-                        let node = model.findNode(id: model.selectedNodeId)
-                        if node != nil {
-                            
-                            let topic = node?.topic
-                            print(node?.topic,"aaaaa")
-                            let  texts =  await model.getIdeas(text: topic ?? "")
-                            model.inputTexts(texts: texts)
-                            sleep(5)
-                        }
-                        else{
-                            print(node?.topic)
-                        }
+        while true {
+            if let _ = gestureModel.computeTransformOfUserPerformedHeartGesture() {
+                print("Heartできた！!")
+                do{
+                    let node = model.findNode(id: model.selectedNodeId)
+                    if node != nil {
+                        let topic = node?.topic
+                        let  texts =  await model.getIdeas(text: topic ?? "")
+                        model.inputTexts(texts: texts)
+                        sleep(5)
+                    }
+                    else{
+                        print(node?.topic)
                     }
                 }
-                    
-                try? await Task.sleep(nanoseconds: 500_000_000) // 0.5秒ごとにチェック
             }
-        
+            try? await Task.sleep(nanoseconds: 500_000_000) // 0.5秒ごとにチェック
+        }
     }
     private func hideKeyboard() {
            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)

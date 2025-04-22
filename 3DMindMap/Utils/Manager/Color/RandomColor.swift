@@ -1,13 +1,13 @@
 import SwiftUI
 
 class RandomColor {
-    public func getRandomColor(_ excludeColor: Color?) -> Color {
-        var color: Color
+    public func getRandomColor(_ excludeColor: String?) -> String {
+        var color: String
         if excludeColor == nil {
-            return CustomColors.randomColors.randomElement()!
+            return CustomColor.randomColors.randomElement() ?? CustomColor.defaultColor
         }
         repeat {
-            color = CustomColors.randomColors.randomElement()!
+            color = CustomColor.randomColors.randomElement() ?? CustomColor.defaultColor
         } while color == excludeColor
         
         return color

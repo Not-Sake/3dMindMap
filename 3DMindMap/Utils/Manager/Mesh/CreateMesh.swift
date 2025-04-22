@@ -2,17 +2,17 @@ import SwiftUI
 import RealityKit
 
 class CreateMesh {
-    public func createNode(id: String, position: Point3D, bgColor: Color?, borderColor: Color?) -> ModelEntity {
+    public func createNode(id: String, position: Point3D, bgColor: String?, borderColor: String?) -> ModelEntity {
         // 🎨 パステルカラーの内側のPlane
         let boxMesh = MeshResource.generatePlane(width: 1, height: 0.3, cornerRadius: .infinity)
-        let pastelColor = UIColor(bgColor ?? Color.white).withAlphaComponent(0.9)
+        let pastelColor = UIColor(Color(bgColor ?? CustomColor.defaultColor)).withAlphaComponent(0.9)
         let material = UnlitMaterial(color: pastelColor)
         let innerEntity = ModelEntity(mesh: boxMesh, materials: [material])
         let borderWidth = 0.04
            
         // 🎨 外側の枠線 (Planeを少し大きく)
         let borderMesh = MeshResource.generatePlane(width: 1 + Float(borderWidth), height: Float(0.3 + borderWidth), cornerRadius: .infinity)
-        let borderUIColor = UIColor((borderColor ?? bgColor) ?? Color.white)
+        let borderUIColor = UIColor(Color(borderColor ?? bgColor ?? CustomColor.defaultColor))
         let borderMaterial = UnlitMaterial(color: borderUIColor)
         let borderEntity = ModelEntity(mesh: borderMesh, materials: [borderMaterial])
         borderEntity.name = "border_\(id)"
