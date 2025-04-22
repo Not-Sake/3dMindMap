@@ -14,8 +14,14 @@ struct MindMapApp: App {
     @State private var avPlayerViewModel = AVPlayerViewModel()
     
     var body: some Scene {
+        WindowGroup() {
+            ContentView()
+                .environment(appModel)
+        }
+        .defaultSize(CGSize(width: 400, height: 5))
+        
         WindowGroup("New Window", for: NewWindowID.ID.self) { $id in
-            ContentView(id: id ?? 1)
+            AddTopicView(id: id ?? 1)
                 .environment(appModel)
                 .modelContainer(for: NodeType.self)
         }
