@@ -32,16 +32,21 @@ struct AddTopicView: View {
                 Button(action: {
                     isFocused = false
                     if model.nodes.count == 0 {
-                        model.addInitialNode(text: model.inputText)
+                        let nodeData = model.createInitialNodeData(topic: model.inputText)
+                        let context = ModelContext(ModelContainerProvider.shared)
+                        context.insert(nodeData)
                     } else {
-                        model.addNode(text: model.inputText)
+                        let nodeData = model.addNodeData(inputText: model.inputText, parentId: model.selectedNodeId)
+                        guard let nodeData else { return }
+                        model.addNode(node: nodeData)
+                        let context = ModelContext(ModelContainerProvider.shared)
+                        context.insert(nodeData)
                     }
+                    model.inputText = ""
                     
                     Task { @MainActor in
                         switch appModel.immersiveSpaceState {
                         case .open:
-                            //                                appModel.immersiveSpaceState = .inTransition
-                        
                             withAnimation(.easeInOut(duration: 1.0)) {
                                 model.isTextField = false
                                 // 1秒かけてスムーズに
@@ -86,6 +91,16 @@ struct AddTopicView: View {
             }
             .padding(.leading, 20)
             .cornerRadius(.infinity)
+            .onAppear() {
+                do {
+                    let context = ModelContext(ModelContainerProvider.shared)
+                    let descriptor = FetchDescriptor<NodeType>()
+                    let nodes = try context.fetch(descriptor)
+                } catch {
+                    print("Error fetching nodes: \(error)")
+                }
+                
+            }
             Text("困ったらハートを作ってね！")
         }
     }
