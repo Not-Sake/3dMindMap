@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		720E91F32DB7A6B20072F07F /* .env in Resources */ = {isa = PBXBuildFile; fileRef = 720E91F22DB7A6AD0072F07F /* .env */; };
+		720E91F62DB7AB4F0072F07F /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 720E91F52DB7AB4F0072F07F /* Alamofire */; };
 		94CD8A7D2D8DB604009FA3AA /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = 94CD8A7C2D8DB604009FA3AA /* RealityKitContent */; };
-		9EF913112D8FAB8000610E46 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 9EF913102D8FAB8000610E46 /* GoogleGenerativeAI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		720E91F22DB7A6AD0072F07F /* .env */ = {isa = PBXFileReference; lastKnownFileType = text; path = .env; sourceTree = "<group>"; };
 		94CD8A772D8DB604009FA3AA /* 3DMindMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 3DMindMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		94CD8A7B2D8DB604009FA3AA /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -42,8 +44,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				720E91F62DB7AB4F0072F07F /* Alamofire in Frameworks */,
 				94CD8A7D2D8DB604009FA3AA /* RealityKitContent in Frameworks */,
-				9EF913112D8FAB8000610E46 /* GoogleGenerativeAI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,6 +55,7 @@
 		94CD8A6E2D8DB604009FA3AA = {
 			isa = PBXGroup;
 			children = (
+				720E91F22DB7A6AD0072F07F /* .env */,
 				94CD8A792D8DB604009FA3AA /* 3DMindMap */,
 				94CD8A7A2D8DB604009FA3AA /* Packages */,
 				94CD8A782D8DB604009FA3AA /* Products */,
@@ -96,7 +99,7 @@
 			name = 3DMindMap;
 			packageProductDependencies = (
 				94CD8A7C2D8DB604009FA3AA /* RealityKitContent */,
-				9EF913102D8FAB8000610E46 /* GoogleGenerativeAI */,
+				720E91F52DB7AB4F0072F07F /* Alamofire */,
 			);
 			productName = 3DMindMap;
 			productReference = 94CD8A772D8DB604009FA3AA /* 3DMindMap.app */;
@@ -127,7 +130,7 @@
 			mainGroup = 94CD8A6E2D8DB604009FA3AA;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				9EF9130F2D8FAB8000610E46 /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
+				720E91F42DB7AB4F0072F07F /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 94CD8A782D8DB604009FA3AA /* Products */;
@@ -144,6 +147,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				720E91F32DB7A6B20072F07F /* .env in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -359,25 +363,25 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		9EF9130F2D8FAB8000610E46 /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
+		720E91F42DB7AB4F0072F07F /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/google/generative-ai-swift";
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.5.6;
+				minimumVersion = 5.10.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		720E91F52DB7AB4F0072F07F /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 720E91F42DB7AB4F0072F07F /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
 		94CD8A7C2D8DB604009FA3AA /* RealityKitContent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RealityKitContent;
-		};
-		9EF913102D8FAB8000610E46 /* GoogleGenerativeAI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9EF9130F2D8FAB8000610E46 /* XCRemoteSwiftPackageReference "generative-ai-swift" */;
-			productName = GoogleGenerativeAI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

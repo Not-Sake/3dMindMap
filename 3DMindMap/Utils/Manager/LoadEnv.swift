@@ -1,3 +1,4 @@
+
 import Foundation
 
 enum LoadEnvError: Error {
@@ -5,7 +6,7 @@ enum LoadEnvError: Error {
 }
 
 struct LoadEnv {
-    init(fileAt path: String = "(FileManager.default.currentDirectoryPath)/.env") throws {
+    init(fileAt path: String = "\(FileManager.default.currentDirectoryPath)/.env") throws {
         guard let envPath = Bundle.main.path(forResource: ".env", ofType: nil),
               let envData = FileManager.default.contents(atPath: envPath),
               let envString = String(data: envData, encoding: .utf8) else {
@@ -22,7 +23,7 @@ struct LoadEnv {
             }
     }
 
-    func value( key: String,  default: String? = nil) -> String? {
+    func value(_ key: String, _ default: String? = nil) -> String? {
         guard let value = getenv(key) else { return nil }
         return String(validatingUTF8: value)
     }

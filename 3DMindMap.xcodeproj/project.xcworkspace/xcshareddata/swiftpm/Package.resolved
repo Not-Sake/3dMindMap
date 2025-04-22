@@ -1,13 +1,13 @@
 {
-  "originHash" : "0df664f125fa11c47946ec126b2052cf5b01925b34bd8b5af496e9da7c013d09",
+  "originHash" : "9420ca262ee7d90a22de564faaa6cbea771e34f9d0d4782e8b23bdddf2cfee27",
   "pins" : [
     {
-      "identity" : "generative-ai-swift",
+      "identity" : "alamofire",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/google/generative-ai-swift",
+      "location" : "https://github.com/Alamofire/Alamofire.git",
       "state" : {
-        "revision" : "44b8ce120425f9cf53ca756f3434ca2c2696f8bd",
-        "version" : "0.5.6"
+        "revision" : "513364f870f6bfc468f9d2ff0a95caccc10044c5",
+        "version" : "5.10.2"
       }
     }
   ],
