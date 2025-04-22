@@ -19,71 +19,140 @@ struct AddTopicView: View {
     @FocusState private var isFocused: Bool
     
     var body: some View {
-        HStack {
-            TextField(
-                "文字を入力",
-                text: $model.inputText
-            )
-            .focused($isFocused)
-            .onAppear() {
-                isFocused = true
-            }
-            Button(action: {
-                isFocused = false
-                if model.nodes.count == 0 {
-                    model.addInitialNode(text: model.inputText)
-                } else {
-                    model.addNode(text: model.inputText)
+        VStack {
+            HStack {
+                TextField(
+                    "文字を入力",
+                    text: $model.inputText
+                )
+                .focused($isFocused)
+                .onAppear() {
+                    isFocused = true
                 }
-                
-                Task { @MainActor in
-                    switch appModel.immersiveSpaceState {
-                    case .open:
-                        //                                appModel.immersiveSpaceState = .inTransition
+                Button(action: {
+                    isFocused = false
+                    if model.nodes.count == 0 {
+                        model.addInitialNode(text: model.inputText)
+                    } else {
+                        model.addNode(text: model.inputText)
+                    }
                     
-                        withAnimation(.easeInOut(duration: 1.0)) {
-                            model.isTextField = false
-                            // 1秒かけてスムーズに
-                            dismiss()
-                        }
-                        break
-                    case .closed:
-                        appModel.immersiveSpaceState = .inTransition
-                        switch await openImmersiveSpace(id: appModel.immersiveSpaceID) {
-                        case .opened:
-                            // Don't set immersiveSpaceState to .open because there
-                            // may be multiple paths to ImmersiveView.onAppear().
-                            // Only set .open in ImmersiveView.onAppear().
-                            withAnimation(.easeInOut(duration: 2.0)) { // 1秒かけてスムーズに
+                    Task { @MainActor in
+                        switch appModel.immersiveSpaceState {
+                        case .open:
+                            //                                appModel.immersiveSpaceState = .inTransition
+                        
+                            withAnimation(.easeInOut(duration: 1.0)) {
+                                model.isTextField = false
+                                // 1秒かけてスムーズに
                                 dismiss()
                             }
                             break
-                            
-                        case .userCancelled, .error:
-                            // On error, we need to mark the immersive space
-                            // as closed because it failed to open.
-                            dismiss()
-                            fallthrough
-                        @unknown default:
-                            // On unknown response, assume space did not open.
-                            withAnimation(.easeInOut(duration: 2.0)) {
-                                appModel.immersiveSpaceState = .closed
+                        case .closed:
+                            appModel.immersiveSpaceState = .inTransition
+                            switch await openImmersiveSpace(id: appModel.immersiveSpaceID) {
+                            case .opened:
+                                // Don't set immersiveSpaceState to .open because there
+                                // may be multiple paths to ImmersiveView.onAppear().
+                                // Only set .open in ImmersiveView.onAppear().
+                                withAnimation(.easeInOut(duration: 2.0)) { // 1秒かけてスムーズに
+                                    dismiss()
+                                }
+                                break
+                                
+                            case .userCancelled, .error:
+                                // On error, we need to mark the immersive space
+                                // as closed because it failed to open.
+                                dismiss()
+                                fallthrough
+                            @unknown default:
+                                // On unknown response, assume space did not open.
+                                withAnimation(.easeInOut(duration: 2.0)) {
+                                    appModel.immersiveSpaceState = .closed
+                                }
                             }
+                            
+                        case .inTransition:
+                            // This case should not ever happen because button is disabled for this case.
+                            break
                         }
-                        
-                    case .inTransition:
-                        // This case should not ever happen because button is disabled for this case.
-                        break
                     }
+                }, label: {
+                    Image(systemName: "paperplane")
+                })
+                .frame(width: 40, height: 40)
+                .padding()
+                .cornerRadius(.infinity)
+            }
+            .padding(.leading, 20)
+            .cornerRadius(.infinity)
+            
+            HStack {
+                TextField(
+                    "文字を入力",
+                    text: $model.inputText
+                )
+                .focused($isFocused)
+                .onAppear() {
+                    isFocused = true
                 }
-            }, label: {
-                Image(systemName: "paperplane")
-            })
-            .frame(width: 40, height: 40)
-            .padding()
+                Button(action: {
+                    isFocused = false
+                    if model.nodes.count == 0 {
+                        model.addInitialNode(text: model.inputText)
+                    } else {
+                        model.addNode(text: model.inputText)
+                    }
+                    
+                    Task { @MainActor in
+                        switch appModel.immersiveSpaceState {
+                        case .open:
+                            //                                appModel.immersiveSpaceState = .inTransition
+                        
+                            withAnimation(.easeInOut(duration: 1.0)) {
+                                model.isTextField = false
+                                // 1秒かけてスムーズに
+                                dismiss()
+                            }
+                            break
+                        case .closed:
+                            appModel.immersiveSpaceState = .inTransition
+                            switch await openImmersiveSpace(id: appModel.immersiveSpaceID) {
+                            case .opened:
+                                // Don't set immersiveSpaceState to .open because there
+                                // may be multiple paths to ImmersiveView.onAppear().
+                                // Only set .open in ImmersiveView.onAppear().
+                                withAnimation(.easeInOut(duration: 2.0)) { // 1秒かけてスムーズに
+                                    dismiss()
+                                }
+                                break
+                                
+                            case .userCancelled, .error:
+                                // On error, we need to mark the immersive space
+                                // as closed because it failed to open.
+                                dismiss()
+                                fallthrough
+                            @unknown default:
+                                // On unknown response, assume space did not open.
+                                withAnimation(.easeInOut(duration: 2.0)) {
+                                    appModel.immersiveSpaceState = .closed
+                                }
+                            }
+                            
+                        case .inTransition:
+                            // This case should not ever happen because button is disabled for this case.
+                            break
+                        }
+                    }
+                }, label: {
+                    Image(systemName: "paperplane")
+                })
+                .frame(width: 40, height: 40)
+                .padding()
+                .cornerRadius(.infinity)
+            }
+            .padding(.leading, 20)
             .cornerRadius(.infinity)
         }
-        .padding(.leading, 20)
-        .cornerRadius(.infinity)
     }
 }
