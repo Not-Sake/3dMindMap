@@ -9,7 +9,6 @@ import SwiftUI
 import RealityKit
 
 struct ContentView: View {
-    let id: Int
     @State var model = ImmersiveViewModel.shared
     @Environment(AppModel.self) private var appModel
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
@@ -92,6 +91,6 @@ struct ContentView: View {
 }
 
 #Preview(windowStyle: .automatic) {
-    ContentView(id: 1)
+    ContentView()
         .environment(AppModel())
 }
