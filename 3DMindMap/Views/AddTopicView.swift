@@ -153,6 +153,7 @@ struct AddTopicView: View {
             }
             .padding(.leading, 20)
             .cornerRadius(.infinity)
+            Text("困ったらハートを作ってね！")
         }
     }
 }
